@@ -1,0 +1,152 @@
+@CHARSET "UTF-8";
+
+.industry-view h3.title {
+    margin-bottom: 10px;
+    color: #464646;
+    font-size: 16px;
+    display: inline-block;
+}
+
+.industry-view .card {
+    border: 1px solid #ddd;
+}
+
+.industry-view .card-block {
+    padding: 20px 15px;
+}
+
+.industry-view .card .card-header .nav-tabs .nav-item a.nav-link.active,.industry-view .card .card-header .nav-tabs .nav-item a.nav-link:hover,.industry-view .card .card-header .nav-tabs .nav-item a.nav-link:focus {
+    color: #fff !important;
+}
+
+.industry-view .card .card-header .nav-tabs {
+    top: 0;
+}
+
+.industry-view .card .card-header .nav-tabs .nav-item {
+    border-right: 1px solid #ddd;
+    text-align: center;
+}
+
+.industry-view .card .card-header .nav-tabs .nav-item .nav-link {
+    font-size: 11px;
+    color: #000;
+    border: 0;
+    padding-bottom: 8px;
+    padding-top: 8px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #f6f5fa;
+}
+
+.industry-view .table-bordered thead th, .industry-view .table-bordered tbody td {
+    font-size: 11px;
+}
+.industry-view .table-bordered thead th{
+	text-transform:capitalize;
+}
+
+.form-group-inputs .form-control + .btn-primary {
+    height: 38px;
+    margin-left: 0px;
+    font-size: 16px;
+}
+
+.form-group-inputs .form-control {
+    border-radius: 0;
+}
+
+a.btn.btn-primary.btn-preview {
+    margin-top: 15px;
+    border-radius: 4px;
+    padding: 7px 17px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.btn-actions {
+    float: right;
+}
+
+.industry-view .btn.btn-success {
+    margin-right: 10px;
+    background: #feac00;
+    border-color: #e29b07;
+}
+.custom-checkbox {
+    padding-left: 30px;
+    padding-top: 5px;
+}
+
+.custom-checkbox label {
+    font-weight: normal;
+    margin-right: 25px;
+}
+.newsletter-items label {
+    font-weight: normal;
+    display: block;
+    text-align: center;
+}
+
+.newsletter-items label.head {
+    font-weight: bold;
+    text-align: left;
+    display: inline-block;
+}
+
+.newsletter-items input[type="checkbox"] {
+    text-align: center;
+    width: 100%;
+}
+.newsletter-items input[type="checkbox"].inline-box {
+    text-align: left;
+    width: auto;
+}
+.sub-head {
+	
+    border-top: 1px solid #eee;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.sub-head:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.btn-actions span {
+    margin-right: 20px;
+    display: inline-block;
+    padding-top: 8px;
+    font-size: 13px;
+}
+
+.btn-actions button {
+    height: 32px !important;
+    margin-bottom: 15px;
+}
+
+.industry-view .card .card-header .nav-tabs .nav-item .nav-link:hover {
+    border: 0;
+}
+.talk-remove {
+    display: inline-block;
+    background: #dee5ec;
+    margin: 0 7px 7px 0;
+    border: 1px solid #ced5dc;
+    border-radius: 4px;
+}
+
+.talk-remove input {
+    padding-top: 2px;
+    position: relative;
+    top: 2px;
+    margin: 6px;
+}
+
+.talk-remove label {
+    color: #525252 !important;
+    margin: 0;
+    display: inline-block;
+    border-left: 1px solid #ced5dc;
+    padding: 4px 10px;
+    font-size: 12px !important;
+}

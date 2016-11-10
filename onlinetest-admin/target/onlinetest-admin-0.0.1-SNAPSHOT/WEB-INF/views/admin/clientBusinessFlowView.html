@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Import Client</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+	var clientData = [[${client}]];
+	console.log(clientData);
+</script>
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+				
+					<div class="row">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-12 col-xl-12 history-col industry-view">
+							<div class="header-block">
+										<h3 class="title">Client Business Flow Preview</h3>
+									<div class="btn-actions">
+									<button class="btn btn-primary btn-sm rounded pull-right"
+															type="button" onclick="noapproveClientBusinessFlowData();">No</button>
+														<button
+															class="btn btn-success btn-sm  space-btn rounded pull-right"
+															type="button" onclick="approveClientBusinessFlowData();">Yes</button>
+									</div>
+									</div><div class="clearfix"></div>
+							<div class="card sameheight-item" data-exclude="xs">
+								<div class="card-header card-header-sm bordered">
+									
+									<ul class="nav nav-tabs pull-right" role="tablist">
+										<!-- <li class="nav-item"><a class="nav-link active"
+											href="#" th:href="@{/css/thvsjsp.css}" role="tab" data-toggle="tab">Create a new
+												industry</a></li> -->
+												<!-- th:href="@{/admin/industry/ajaxDisplay}" -->
+												
+												
+										<li class="nav-item"><a class="nav-link active"
+											href="#tabCLIENT_BUSINESS_FLOW" role="tab" data-toggle="tab" id="CLIENT_BUSINESS_FLOW" 
+											>ClientBusinessFlowBuyer-CLIENT_BUSINESS_FLOW</a></li><!-- onclick="getIndustryDetails(this.id);" -->		
+												
+												
+										<li class="nav-item"><a class="nav-link"
+											href="#tabCLIENT_BUSINESS_FLOW_DETAIL" role="tab" data-toggle="tab" id="CLIENT_BUSINESS_FLOW_DETAIL" 
+											>ClientBusinessFlowBuyer-CLIENT_BUSINESS_FLOW_DETAIL </a></li><!-- onclick="getIndustryDetails(this.id);" -->
+											
+										<li class="nav-item"><a class="nav-link"
+										href="#tabClientMainCompetitor" role="tab" data-toggle="tab" id="ClientMainCompetitor" 
+										>ClientMainCompetitor </a></li><!-- onclick="getIndustryDetails(this.id);" -->
+										
+										
+										<li class="nav-item"><a class="nav-link"
+										href="#tabClientBusinessFlowSeller" role="tab" data-toggle="tab" id="ClientBusinessFlowSeller" 
+										>ClientBusinessFlowSeller-CLIENT_BUSINESS_FLOW</a></li><!-- onclick="getIndustryDetails(this.id);" -->
+										
+										<li class="nav-item"><a class="nav-link"
+										href="#tabCLIENT_BUSINESS_FLOW_DETAIL" role="tab" data-toggle="tab" id="CLIENT_BUSINESS_FLOW_DETAIL" 
+										>ClientBusinessFlowSeller-CLIENT_BUSINESS_FLOW_DETAIL</a></li><!-- onclick="getIndustryDetails(this.id);" -->
+										
+										
+										<li class="nav-item"><a class="nav-link"
+										href="#tabClientMainClient" role="tab" data-toggle="tab" id="ClientMainClient" 
+										>ClientMainClient</a></li><!-- onclick="getIndustryDetails(this.id);" -->
+										
+										<li class="nav-item"><a class="nav-link"
+										href="#tabCClientBusinessFlow" role="tab" data-toggle="tab" id="CClientBusinessFlow" 
+										>ClientBusinessFlow</a></li><!-- onclick="getIndustryDetails(this.id);" -->
+										
+									</ul>
+								</div>
+								
+								
+								
+								<div class="card-block">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active fade in" id="tabCLIENT_BUSINESS_FLOW">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>registrationNumber</th>
+															<th>buyerDomesticText</th>
+															<th>bankAccountsCount</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+														 <tr th:each="key,iterStat : ${data.ClientBusinessFlowBuyer.CLIENT_BUSINESS_FLOW}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.registrationNumber}"></td>
+													        <td th:text="${key.buyerDomesticText}"></td>
+													        <td th:text="${key.bankAccountsCount}"></td>
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabCLIENT_BUSINESS_FLOW_DETAIL">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>businessGroupClassification</th>
+															<th>businessSalesSourcingSplit</th>
+															<th>percentageCOGS</th>
+															<th>percentageSales</th>
+															<th>COGSTerms</th>
+															<th>salesTerms</th>
+															<th>percentageDelayPayment</th>
+															<th>ConnectionsCountCOGS</th>
+															<th>ConnectionsCountSales</th>
+															<th>registrationNumber</th>
+														</tr>
+														</thead>
+														<tbody>
+														 <tr th:each="key,iterStat : ${data.ClientBusinessFlowBuyer.CLIENT_BUSINESS_FLOW_DETAIL}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.businessGroupClassification}"></td>
+													        <td th:text="${key.businessSalesSourcingSplit}"></td>
+													        <td th:text="${key.percentageCOGS}"></td>
+													         <td th:text="${key.percentageSales}"></td>
+													        <td th:text="${key.COGSTerms}"></td>
+													        <td th:text="${key.salesTerms}"></td>
+													        <td th:text="${key.percentageDelayPayment}"></td>
+													        <td th:text="${key.ConnectionsCountCOGS}"></td>
+													        <td th:text="${key.ConnectionsCountSales}"></td>
+													        <td th:text="${key.registrationNumber}"></td>
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabClientMainCompetitor">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Registration No</th>
+															<th>playerType</th>
+															<th>playerName</th>
+															<th>shareValue</th>
+														</tr>
+														</thead>
+														<tbody>
+														 <i th:each="key,iterStat : ${data.ClientMainCompetitor}" th:object="${key}">
+														 
+														 <tr th:each="val,iterStat1 : ${key.value}" th:object="${val}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.key}"></td>
+													        <td th:text="${val.playerType}"></td>
+													        <td th:text="${val.playerName}"></td>
+													        <td th:text="${val.shareValue}"></td>
+													         </tr>
+													         </i>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabClientBusinessFlowSeller">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>registrationNumber</th>
+															<th>sellerDomesticText</th>
+															<th>bankAccountsCount</th>
+															<!-- <th>isChanged</th> -->
+															
+														</tr>
+														</thead>
+														<tbody>
+														<tbody>
+														 <tr th:each="key,iterStat : ${data.ClientBusinessFlowSeller.CLIENT_BUSINESS_FLOW}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.registrationNumber}"></td>
+													        <td th:text="${key.sellerDomesticText}"></td>
+													        <td th:text="${key.bankAccountsCount}"></td>
+													         
+													     </tr>
+													</tbody>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabCLIENT_BUSINESS_FLOW_DETAIL">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>businessGroupClassification</th>
+															<th>businessSalesSourcingSplit</th>
+															<th>percentageCOGS</th>
+															<th>percentageSales</th>
+															<th>COGSTerms</th>
+															<th>salesTerms</th>
+															<th>percentageDelayPayment</th>
+															<th>ConnectionsCountCOGS</th>
+															<th>ConnectionsCountSales</th>
+															<th>registrationNumber</th>
+															
+															
+															<!-- <th>isChanged</th> -->
+															
+														</tr>
+														</thead>
+														<tbody>
+													
+														 <tr th:each="key,iterStat : ${data.ClientBusinessFlowSeller.CLIENT_BUSINESS_FLOW_DETAIL}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.businessGroupClassification}"></td>
+													        <td th:text="${key.businessSalesSourcingSplit}"></td>
+													        <td th:text="${key.percentageCOGS}"></td>
+													         <td th:text="${key.percentageSales}"></td>
+													        <td th:text="${key.COGSTerms}"></td>
+													        <td th:text="${key.salesTerms}"></td>
+													        <td th:text="${key.percentageDelayPayment}"></td>
+													        <td th:text="${key.ConnectionsCountCOGS}"></td>
+													        <td th:text="${key.ConnectionsCountSales}"></td>
+													        <td th:text="${key.registrationNumber}"></td>
+													         
+													     </tr>
+													
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabClientMainClient">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Registration No</th>
+															<th>playerType</th>
+															<th>playerName</th>
+															<th>shareValue</th>
+														</tr>
+														</thead>
+														<tbody>
+														 <i th:each="key,iterStat : ${data.ClientMainClient}" th:object="${key}">
+														 <tr th:each="val,iterStat1 : ${key.value}" th:object="${val}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.key}"></td>
+													        <td th:text="${val.playerType}"></td>
+													        <td th:text="${val.playerName}"></td>
+													        <td th:text="${val.shareValue}"></td>
+													         </tr>
+													         </i>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										
+										
+										<div role="tabpanel" class="tab-pane  fade " id="tabCClientBusinessFlow">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>registrationNumber</th>
+															<th>WCCreditLine</th>
+															<th>WCFluctuation</th>
+															<th>WCFluctuationText</th>
+															<th>bankAccountsCount</th>
+															<th>bankAccountsText</th>
+														</tr>
+														</thead>
+														<tbody>
+														 <tr th:each="key,iterStat : ${data.ClientBusinessFlow}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:text="${key.registrationNumber}"></td>
+													        <td th:text="${key.WCCreditLine}"></td>
+													        <td th:text="${key.WCFluctuation}"></td>
+													        <td th:text="${key.WCFluctuationText}"></td>
+													        <td th:text="${key.bankAccountsCount}"></td>
+													        <td th:text="${key.bankAccountsText}"></td>
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+
+										
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+
+			<div th:replace="/fragments/component :: footer" />
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

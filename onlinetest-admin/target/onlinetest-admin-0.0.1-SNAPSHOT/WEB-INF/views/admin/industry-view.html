@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Macro</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+
+					<div class="row">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-12 col-xl-12 history-col industry-view">
+							<div class="header-block">
+								<h3 class="title">Industry View</h3>
+								<div class="btn-actions">
+									<span>Do you wish to approve the data.</span>
+									<button class="btn btn-primary btn-sm rounded pull-right"
+										type="button" onclick="noapproveIndustryData();">No</button>
+									<button
+										class="btn btn-success btn-sm  space-btn rounded pull-right"
+										type="button" onclick="approveIndustryData();">Yes</button>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<div class="card sameheight-item" data-exclude="xs">
+								<div class="card-header card-header-sm bordered">
+
+									<ul class="nav nav-tabs pull-right" role="tablist">
+										<!-- <li class="nav-item"><a class="nav-link active"
+											href="#" th:href="@{/css/thvsjsp.css}" role="tab" data-toggle="tab">Create a new
+												industry</a></li> -->
+										<!-- th:href="@{/admin/industry/ajaxDisplay}" -->
+										<li class="nav-item"><a class="nav-link active"
+											href="#tabindustry" role="tab" data-toggle="tab"
+											id="industry">Industry </a></li>
+										<!-- onclick="getIndustryDetails(this.id);" -->
+										<li class="nav-item"><a class="nav-link"
+											href="#tabarchetypes" role="tab" data-toggle="tab"
+											id="archetypes">ArcheType </a></li>
+										<!-- onclick="getArcheTypeHeader(this.id);" -->
+										<li class="nav-item"><a class="nav-link"
+											href="#tabsegmentBusinessFlow" role="tab" data-toggle="tab"
+											id="segmentBusinessFlow">SegmentBusinessFlow
+										</a></li>
+										<!-- onclick="getSegmentBusinessFlow(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link"
+											href="#tabbusinessFlowSettings" role="tab" data-toggle="tab"
+											id="businessFlowSettings">Sub Segment
+												Details </a></li>
+										<!-- onclick="getSubSegmentDetails(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link"
+											href="#tabsegments" role="tab" data-toggle="tab"
+											id="segments">Segments </a></li>
+										<!-- onclick="getSegment(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link" href="#tabvcc"
+											role="tab" data-toggle="tab" id="vcc">Value
+												Chain Component </a></li>
+										<!-- onclick="getValueChainComponent(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link"
+											href="#tabindustryInsights" role="tab" data-toggle="tab"
+											id="industryInsights"> Industry Insights </a></li>
+										<!-- onclick="getIndustryInsights(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link"
+											href="#tabsegmentInsights" role="tab" data-toggle="tab"
+											id="segmentInsights"> Segment Insights </a></li>
+										<!-- onclick="getSegmentInsights(this.id);" -->
+
+										<li class="nav-item"><a class="nav-link"
+											href="#tabindustryPainPoints" role="tab" data-toggle="tab"
+											id="industryPainPoints"> Pain Points </a></li>
+										<!-- onclick="getPainPoints(this.id);" -->
+									</ul>
+								</div>
+								<div class="card-block">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active fade in"
+											id="tabindustry">
+											<div class="table-responsive">
+												<table id="industryTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>IndustryName</th>
+															<th>industryHistoricalCagr</th>
+															<th>industryFutureCagr</th>
+															<th>historicalCagrSource</th>
+															<th>futureCagrSource</th>
+															<th>yearUpload</th>
+															<th>industryTradeUrl</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.industry != null }" th:each="key,iterStat : ${data.industry}"	th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${key.industryName != null }" th:text="${key.industryName}"></td>
+															<td th:if="${key.industryHistoricalCagr != null }" th:text="${key.industryHistoricalCagr}"></td>
+															<td th:if="${key.industryFutureCagr != null }" th:text="${key.industryFutureCagr}"></td>
+															<td th:if="${key.historicalCagrSource != null }" th:text="${key.historicalCagrSource}"></td>
+															<td th:if="${key.futureCagrSource != null }" th:text="${key.futureCagrSource}"></td>
+															<td th:if="${key.yearUpload != null }" th:text="${key.yearUpload}"></td>
+															<td th:if="${key.industryTradeUrl != null }" th:text="${key.industryTradeUrl}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+
+										</div>
+										<div role="tabpanel" class="tab-pane fade" id="tabarchetypes">
+											<div class="table-responsive">
+												<table id="archeTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Archetype Name</th>
+															<th>Archetype Order</th>
+															<th>Archetype Characteristics</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.archetypes != null }" th:each="key,iterStat : ${data.archetypes}"
+															th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${key.archetypeName != null }" th:text="${key.archetypeName}"></td>
+															<td th:if="${key.archetypeOrder != null }" th:text="${key.archetypeOrder}"></td>
+															
+														<td th:if="${key.archetypeCharacteristic != null }" th:utext="${#strings.replace(key.archetypeCharacteristic, '::','&lt;br/&gt;')}"></td>
+														
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										<div role="tabpanel" class="tab-pane fade"
+											id="tabsegmentBusinessFlow">
+											<div class="table-responsive">
+												<table id="segmentBusinessFlowTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Industry Name</th>
+															<th>SegmentHeader Name</th>
+															<th>SubSegment Name</th>
+															<th>Value Chain Component Name</th>
+															<th>BusinessGroup Classification</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.segmentBusinessFlow != null }" th:each="key,iterStat : ${data.segmentBusinessFlow}"
+															th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${data.industry.industryName != null }" th:text="${data.industry.industryName}"></td>
+															<td th:if="${key.segmentHeaderName != null }" th:text="${key.segmentHeaderName}"></td>
+															<td th:if="${key.subSegmentName != null }" th:text="${key.subSegmentName}"></td>
+															<td th:if="${key.valueChainComponentName != null }" th:text="${key.valueChainComponentName}"></td>
+															<td th:if="${key.businessGroupClassification != null }" th:text="${key.businessGroupClassification}"></td>
+														</tr>
+													<tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										<div role="tabpanel" class="tab-pane fade"
+											id="tabbusinessFlowSettings">
+											<div class="table-responsive">
+												<table id="businessFlowSettingsTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Industry Name</th>
+															<th>SegmentHeader Name</th>
+															<th>SubSegment Name</th>
+															<th>Value Chain Component Name</th>
+															<th>Buyer Domestic Text</th>
+															<th>Seller Domestic Text</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.businessFlowSettings != null }" th:each="key,iterStat : ${data.businessFlowSettings}"
+															th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${data.industry.industryName != null }" th:text="${data.industry.industryName}"></td>
+															<td th:if="${key.segmentHeaderName != null }" th:text="${key.segmentHeaderName}"></td>
+															<td th:if="${key.subSegmentName != null }" th:text="${key.subSegmentName}"></td>
+															<td th:if="${key.valueChainComponentName != null }" th:text="${key.valueChainComponentName}"></td>
+															<td th:if="${key.buyerDomesticText != null }" th:text="${key.buyerDomesticText}"></td>
+															<td th:if="${key.sellerDomesticText != null }" th:text="${key.sellerDomesticText}"></td>
+														</tr>
+													</tbody>
+
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										<div role="tabpanel" class="tab-pane fade" id="tabsegments">
+											<div class="table-responsive">
+												<table id="tabsegmentsTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Industry Name</th>
+															<th>Segment Name</th>
+															<th>Segment Cagr</th>
+															<th>Associated Arche Type Name</th>
+															<th>Market Structure Insight</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.segments != null }" th:each="key,iterStat : ${data.segments}"
+															th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${data.industry.industryName != null }" th:text="${data.industry.industryName}"></td>
+															<td th:if="${key.segmentName != null }" th:text="${key.segmentName}"></td>
+															<td th:if="${key.segmentCagr != null }" th:text="${key.segmentCagr}"></td>
+															<td th:if="${key.associatedArcheTypeName != null }" th:text="${key.associatedArcheTypeName}"></td>
+															<td th:if="${key.marketStructureInsight != null }" th:text="${key.marketStructureInsight}"></td>
+														</tr>
+													<tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+
+										<div role="tabpanel" class="tab-pane fade" id="tabvcc">
+											<div class="table-responsive">
+												<table id="tabvccTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>VCC Name</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.vcc != null }" th:each="key,iterStat : ${data.vcc}"
+															th:object="${key}">
+															<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															<td th:if="${key.name != null }" th:text="${key.name}"></td>
+														</tr>
+													<tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+
+										<div role="tabpanel" class="tab-pane fade"
+											id="tabindustryInsights">
+											<div class="table-responsive">
+												<table id="tabindustryInsightsTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Industry Insights</th>
+															<th>Value</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.industryInsights != null }" th:each="key,iterStat : ${data.industryInsights}"
+															th:object="${key}">
+															<i th:if="${key != null }" th:each="md : ${key}" th:object="${md}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+																<td th:if="${md.key != null }" th:text="${md.key}"></td>
+																<td th:if="${md.value != null }" th:utext="${#strings.replace(md.value, '::','&lt;br/&gt;')}"></td>
+															
+															</i>
+														</tr>
+													<tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+
+										<div role="tabpanel" class="tab-pane fade"
+											id="tabsegmentInsights">
+											<div class="table-responsive">
+												<table id="tabsegmentInsightsTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Segment Name</th>
+															<th>Industry Insights</th>
+															<th>Value</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${data.segmentInsights != null }" th:each="key,iterStat : ${data.segmentInsights}"
+															th:object="${key}">
+															<i th:if="${key != null }" th:each="tey : ${key}" th:object="${tey}"> <i
+																th:each="md : ${tey}" th:object="${md}">
+																	<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+																	<td th:if="${tey.key != null }" th:text="${tey.key}"></td>
+																	<td th:if="${md.key != null }" th:text="${md.key}"></td>
+																 	<!-- <td th:text="${md.value}"></td> -->
+																	<td th:if="${md.value != null }" th:utext="${#strings.replace(md.value, '::','&lt;br/&gt;')}"></td>
+															
+															</i>
+															</i>
+														</tr>
+													</tbody>
+
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										<div role="tabpanel" class="tab-pane fade"
+											id="tabindustryPainPoints">
+											<div class="table-responsive">
+												<table id="tabindustryPainPointsTable"
+													class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Paint Point Name</th>
+															<th>Sub Pain Points</th>
+															<th>Description</th>
+														</tr>
+													</thead>
+													<tbody>
+														<i th:if="${data.industryPainPoints != null }" th:each="key,iterStat : ${data.industryPainPoints}"
+															th:object="${key}">
+
+															<tr th:if="${key.subPainPoints != null }" th:each="md,c : ${key.subPainPoints}"
+																th:object="${md}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+																<td th:if="${key.paintPointName != null }" th:text="${key.paintPointName}"></td>
+																<td th:if="${md.subPainPointName != null }" th:text="${md.subPainPointName}"></td>
+																<td th:if="${md.description != null }" th:text="${md.description}"></td>
+
+															</tr>
+
+														</i>
+													</tbody>
+												</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+
+			<div th:replace="/fragments/component :: footer" />
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

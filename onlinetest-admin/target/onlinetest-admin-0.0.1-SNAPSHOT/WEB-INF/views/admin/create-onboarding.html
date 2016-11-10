@@ -1,0 +1,443 @@
+<!DOCTYPE  html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+<meta charset="UTF-8" />
+<title>SCB | Import Client</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function(){
+     
+	$("#uploadForm").submit(function(e) {
+	    e.preventDefault();
+	    var $form = $("#uploadForm");
+	    var fd = new FormData($(this)[0]);
+	    
+	    var filename = $("#msg").val();
+
+        var extension = filename.replace(/^.*\./, '');
+        
+        var string = "pdf";
+        
+        var arr = string.split(',');
+        
+        if(filename == ''){
+        	alert("Select File First.");
+        }else{
+        	if($.inArray(extension, arr) > -1){
+            	myAjax($form,fd);
+            }else{
+            	alert('your File extension is wrong. It should be '+string);
+    		      $("#msg").val("");
+            }	
+        }
+        
+	    console.info(fd);
+	   
+	});
+	
+	function myAjax($form,fd){
+		 $.ajax({
+		        type : 'POST',
+		        url : $form.attr('action'),
+		        data : fd,
+		        cache : false,
+		        processData : false,
+		        contentType : false,
+		        beforeSend: function() {   $('#myModal').modal('show'); $("#msg").val(""); },
+		        complete: function() {   $('#myModal').modal('hide');  },
+		        success : function(response) {
+		             console.info(response);
+		             var status = response['status'];
+						if (status == 200) {
+							hideSpinner();
+							result = response['data'];
+							if(result ==true)
+								{
+								alert("File has been uploaded.")
+								
+								}
+							else{
+								alert("Onboarding data not  saved")
+							}
+						} else {
+							showAlert("Error while approving client data.", "Error");
+							hideSpinner();
+						}  
+						window.location.href='/sherlock-admin/onboarding/dashboard';
+		        
+		        },
+		        error : function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.info("Status: " + XMLHttpRequest);
+		            alert("Error: " + errorThrown);
+		        }
+		    });
+	}
+});
+
+/* window.onload=function(){
+	   document.getElementById("view").style.display='none';
+	 } */
+</script>
+
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+	
+<script type="text/javascript" th:inline="javascript">
+
+	var clientData = [[${client}]];
+	console.log(clientData);
+	
+	function fillData(){
+	
+	var result =[[${isSave}]];
+	if(result==true)
+	alert("Document Master saved successfully");
+		
+	var products = [[${products}]];
+	var productsCount = Object.keys(products).length;
+	if(products!=null && productsCount >0){
+		for (var key in products){
+			
+			if(products[key].productName=="Credit"){
+				
+				$("#credit").html(products[key].productName);
+				$("#creditName").val(products[key].productName);
+				$("#creditId").val(products[key].id);
+				
+				}	
+			
+			if(products[key].productName=="FX"){
+				$("#fx").html(products[key].productName);
+				$("#fxName").val(products[key].productName);
+				$("#fxId").val(products[key].id);
+			
+			}
+			
+			if(products[key].productName=="BCM"){
+				$("#bcm").html(products[key].productName);
+				$("#bcmName").val(products[key].productName);
+				$("#bcmId").val(products[key].id);
+				
+			}
+			
+			if(products[key].productName=="Trade"){
+				$("#trade").html(products[key].productName);
+				$("#tradeName").val(products[key].productName);
+				$("#tradeId").val(products[key].id);
+			
+			}
+		}
+		
+	}else{
+	
+		document.getElementById('containtArea').innerHTML = "";
+	}
+		
+	var documentTypes = [[${documentTypes}]];
+	var count = Object.keys(documentTypes).length
+	var industryDropDown  = $("#documentType");
+	if(documentTypes!=null && count >0){
+		industryDropDown.append('<option value="-1" selected="selected">Application Form</option>');
+		for (var key in documentTypes){
+			
+			var option = '<option value="'+ documentTypes[key].id +'">'+ documentTypes[key].documentType + "</option>";
+			industryDropDown.append(option);
+		}
+		
+	}else{
+	}
+	}
+	window.onload = function () { fillData(); }
+	
+	function getdocumentTypeName(){
+		var name =$("#documentType option:selected").text();
+			$('#documentTypeName').val(name);
+		
+	}
+	
+	 function chooseFile(){
+  	   var val= document.getElementById("msg").value;
+  	   if(val.length>=3){
+  		   document.getElementById("uploadFile").disabled =false;
+  	   }else{
+  		   document.getElementById("uploadFile").disabled = true;
+  	   }
+     }
+	
+		
+</script>
+</head>
+
+    <body>
+        <div class="main-wrapper">
+            <div class="app" id="app">
+                 <div th:replace="/fragments/component :: header" />
+				<div th:replace="/fragments/component :: sidebar" />
+                <div class="sidebar-overlay" id="sidebar-overlay"></div>
+                <article class="content dashboard-page">
+                <form id="uploadForm" method="POST"	th:action="@{/onboarding/saveNewDocument}" enctype="multipart/form-data">
+                    <section class="section">
+                        <div class="row sameheight-container">
+                            <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+                                <div class="card">
+                                <div class="card-header card-header-sm bordered">
+								   <div class="header-block">
+                                     <h3 class="title">Create</h3> 
+								   </div>
+								  </div>
+                                  <div class="card-block card-sd">
+                                      <div class="row">
+                                          <div class="col-sm-12"><p>Step 1: Select Document type to upload PDF Format</p></div>
+                                          <div class="col-sm-4">
+                                          <div class="select-itmes">
+                                        <!--     <label class="control-label">Select RM</label> -->
+                                        	<input type="hidden" name="documentTypeName" id="documentTypeName">
+                                            <select class="c-select boxed form-control form-control-sm" id="documentType" name="documentType" onchange="getdocumentTypeName();" >
+                                            </select>
+                                           </div>
+                                          </div>
+                                           
+                                          <!-- <div class="col-sm-2">
+                                            <button class="btn btn-primary btn-p" type="button">Go</button>
+                                           </div>	 -->	
+                                        </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Step 2: Name of new document form</p></div>
+                                          <div class="col-sm-4">
+                                          <div class="select-itmes">
+                                        <!--     <label class="control-label">Select RM</label> -->
+                                           <!--  <select class="c-select boxed form-control form-control-sm" >
+                                              <option>Select</option>
+                                            </select> -->
+                                             <input type="text" name="documentName" id="documentName" class="form-control boxed">
+                                           </div>
+                                          </div>
+                                           
+                                          <!-- <div class="col-sm-2">
+                                            <button class="btn btn-primary btn-p" type="button">Go</button>
+                                           </div> -->		
+                                        </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Step 3: Select which of the following(s) that is applicable for this document form</p></div>
+                                          <div class="col-sm-12">
+                                            <div class="search-newsletter">
+                                                <div class="newsletter-items">
+                                                <div class="col-sm-12">
+                                                <div class="row">
+                                                	<div class="col-sm-2 col-sm-offset-2"><label for="ac-open">Pre-Doc</label></div>
+                                                	<div class="col-sm-2"><label for="ac-open">Personal-Guarantee</label></div>
+                                                	<div class="col-sm-2"><label for="ac-open">Corporate -Guarantee</label></div>
+                                                	<div class="col-sm-2"><label for="ac-open">New-Account</label></div>
+                                                	<div class="col-sm-2"><label for="ac-open">Existing Account</label></div>
+                                                </div>
+                                                 <div id="containtArea">
+                                                <div class="sub-head">
+                                                <div class="row">
+                                                	<div class="col-sm-2"><input class="inline-box" type="checkbox" id="ac-open" name="credit"> <label class="head" for="ac-open" id="credit" >Account Opening</label></div>
+                                                	<input type="hidden" name="creditName" id="creditName">
+                                                	<input type="hidden" name="creditId" id="creditId">
+                                                	
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="credit_Pre_Doc"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="credit_Personal_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="credit_Carporate_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="credit_New_Account"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="credit_Existing_Account"></div>
+                                                	
+                                                </div>
+                                                </div>
+                                               
+                                                <div class="sub-head">
+                                                <div class="row">
+                                                	<div class="col-sm-2"><input class="inline-box" type="checkbox" id="ac-open" name="fx"> <label class="head" for="ac-open" id="fx" >Account Opening</label></div>
+                                                	<input type="hidden" name="fxName" id="fxName">
+                                                	<input type="hidden" name="fxId" id="fxId">
+                                                	
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="fx_Pre_Doc"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="fx_Personal_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="fx_Carporate_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="fx_New_Account"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="fx_Existing_Account"></div>
+                                               
+                                                </div>
+                                                </div>
+                                                
+                                                <div class="sub-head">
+                                                <div class="row">
+                                                	<div class="col-sm-2"><input class="inline-box" type="checkbox" id="ac-open" name="bcm"> <label class="head" for="ac-open" id="bcm" >Account Opening</label></div>
+                                                	
+                                                	<input type="hidden" name="bcmName" id="bcmName">
+                                                	<input type="hidden" name="bcmId" id="bcmId">
+                                                	
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="bcm_Pre_Doc"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="bcm_Personal_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="bcm_Carporate_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="bcm_New_Account"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="bcm_Existing_Account"></div>
+                                               
+                                                </div>
+                                                </div>
+                                                <div class="sub-head">
+                                                <div class="row">
+                                                	<div class="col-sm-2"><input class="inline-box" type="checkbox" id="ac-open" name="trade"> <label class="head" for="ac-open" id="trade" >Account Opening</label></div>
+                                                	<input type="hidden" name="tradeName" id="tradeName">
+                                                	<input type="hidden" name="tradeId" id="tradeId">
+                                                	
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="trade_Pre-Doc"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="trade_Personal_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="trade_Carporate_Guarantee"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="trade_New_Account"></div>
+                                                	<div class="col-sm-2"><input type="checkbox" id="ac-open" name="trade_Existing_Account"></div>
+                                                	
+                                                </div>
+                                                </div>
+                                                </div>
+                                                
+                                                
+                                                
+                                                </div>
+                                                </div>                                                
+                                               
+                                            </div>
+                                            </div>		
+                                        </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Upload Document Form in PDF Format</p></div>
+                                          <div class="col-sm-12">
+                                            <div class="row">                                                
+                                                <div class="col-sm-12">
+                                                <div class="form-group-inputs"> 
+                                                    <div class="pull-left" style="margin-top:8px;">
+                                                  <!--   <input type="radio" id="yes"> <label for="yes">Yes  &nbsp; &nbsp;</label> -->
+                                                    
+                                                    </div>
+                                                   
+                                                    <input id="msg" type="file" class="form-control boxed" name="pdfFile" onchange="chooseFile()">
+                                                    <!-- <button class="btn btn-primary btn-lg" type="button">Go</button> -->
+                                                </div>
+                                                </div>
+                                              </div>
+                                                
+                                                <div class="row">
+                                                <div class="col-sm-8">
+                                               <!--  <input type="radio" id="no"> <label for="trade">No</label> -->
+                                                </div>
+                                                
+                                                </div>
+                                                
+                                                <div class="row">
+                                                <div class="col-sm-12">
+                                                <button class="btn btn-primary btn-p btn-go" type="submit" id ="uploadFile" disabled>Save</button>
+                                                </div>
+                                                
+                                                </div>
+                                                
+                                                
+                                            </div>		
+                                        </div>
+                                        
+                                      <!-- <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Step 4: Upload successful. <a class="ab" href="javascript:void(0)">PREVIEW</a></p>
+                                          </div>
+                                          <div class="col-sm-12">
+                                           <div class="approve-imaes">
+                                            <p>To approve new Document Form? 
+                                            <button class="btn btn-primary btn-sm rounded pull-right" type="button">No</button>
+                                            <button class="btn btn-success space-btn rounded pull-right" type="button">Yes</button>
+                                            </p>
+                                            </div>
+                                                
+                                            </div>		
+                                        </div> -->
+                                  </div>
+                                    
+                                  </div>
+                            </div>
+                        </div>
+                    </section>
+                    </form>
+                    <div id="myModal" class="modal">
+						<div class="row">
+							<div class="col-sm-12" style="margin-top:25%;margin-left:50%;">
+								<img  src="../../../resources/assets/spinner.gif"
+									th:src="@{/resources/assets/spinner.gif}"  />
+								 <span id="processMsg"></span>
+							 </div>
+						</div>
+					</div>
+                </article>
+                	<div th:replace="/fragments/component :: footer" />
+                <div class="modal fade" id="modal-media">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title">Media Library</h4> </div>
+                            <div class="modal-body modal-tab-container">
+                                <ul class="nav nav-tabs modal-tabs" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" href="#gallery" data-toggle="tab" role="tab">Gallery</a> </li>
+                                    <li class="nav-item"> <a class="nav-link active" href="#upload" data-toggle="tab" role="tab">Upload</a> </li>
+                                </ul>
+                                <div class="tab-content modal-tab-content">
+                                    <div class="tab-pane fade" id="gallery" role="tabpanel">
+                                        <div class="images-container">
+                                            <div class="row"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade active in" id="upload" role="tabpanel">
+                                        <div class="upload-container">
+                                            <div id="dropzone">
+                                                <form action="/" method="POST" enctype="multipart/form-data" class="dropzone needsclick dz-clickable" id="demo-upload">
+                                                    <div class="dz-message-block">
+                                                        <div class="dz-message needsclick"> Drop files here or click to upload. </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Insert Selected</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <div class="modal fade" id="confirm-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title"><i class="fa fa-warning"></i> Alert</h4> </div>
+                            <div class="modal-body">
+                                <p>Are you sure want to do this?</p>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button> <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+        <script src="js/vendor.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>

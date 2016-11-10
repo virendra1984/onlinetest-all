@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>SCB</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+      <!--   <link rel="stylesheet" href="css/vendor.css">
+		<link rel="stylesheet" id="theme-style" href="css/app.css">
+		<link rel="stylesheet" id="theme-style" href="css/app-purple.css">--> 
+		<object th:include="fragments/header :: head" th:remove="tag" />
+        <!-- Theme initialization -->
+    </head>
+
+    <body>
+        <div class="auth">
+            <div class="auth-container">
+                <div class="card1">
+                    <header class="auth-header">
+                       <img th:src="@{/resources/assets/scb-logo.png}" alt="SCB" /> 
+					</header>
+                    <div class="auth-content">
+                        <form class="form-narrow form-horizontal" action="#" method="post" th:action="@{/authenticate}">
+                        	
+                            <div class="form-group">
+                            <span th:if="${param.error}" class="error" th:text="${param.message}">Bad Credentials</span>
+							<div class="log-in-input"></div>
+							
+							<input type="email" class="form-control underlined" id="j_username"  autofocus="autofocus" placeholder="Your email address" 
+									name="j_username"  required> 
+							</div>
+                            <div class="form-group"><div class="password-in-input"></div>
+                            
+                         <!--   <input type="password" class="form-control underlined" name="password" id="password" placeholder="Your password" required> --> 
+                          </div>
+                          
+                            <input type="password" id="j_password" name="j_password" placeholder="password"
+									class="form-control underlined" required="required" />
+                            <div class="form-group"> 
+                            
+                            <input type="hidden"	name="_spring_security_remember_me" />
+							<button type="submit" class="btn btn-block btn-primary btn-space btn-log">Log in</button> 
+							</div>
+                            <div class="form-group forget-it">
+							<!-- Forgot your login detail?<a href="reset.html" class="forgot-btn pull-right">Get help signing in.</a>  -->
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+
+      <!--   <script src="js/vendor.js"></script>
+        <script src="js/app.js"></script> --> 
+        
+        
+    </body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE  html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+<meta charset="UTF-8" />
+<title>SCB | Import Client</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+	var clientData = [[${client}]];
+	console.log(clientData);
+	
+	function fillData(){
+	
+	var result =[[${isDelete}]];
+	if(result==true)
+	alert("Document_master  deleted successfully");
+	var documentTypes = [[${documentTypes}]];
+	var count = Object.keys(documentTypes).length
+	var industryDropDown  = $("#documentType");
+	if(documentTypes!=null && count >0){
+		industryDropDown.append('<option value="-1" selected="selected">Application Form</option>');
+		for (var key in documentTypes){
+			
+			var option = '<option value="'+ documentTypes[key].id +'">'+ documentTypes[key].documentType + "</option>";
+			industryDropDown.append(option);
+		}
+		
+	}else{
+	}
+	}
+	window.onload = function () { fillData(); }
+	
+	function getdocumentTypeName(){
+		var name =$("#documentType option:selected").text();
+			$('#documentTypeName').val(name);
+		
+	}
+	
+	function getSubmoduleOnModuleSelection() {
+	    var str =$("#documentType").val();
+		var url = "/sherlock-admin/onboarding/sub-type?documentTypeId="+str;
+		var result = "";
+		$.ajax({
+			type : "GET",
+			url : url,
+			async : false,
+			success : function(response) {
+				
+				var status = response['status'];
+				if (status == 200) {
+					hideSpinner();
+					result = response['data'];
+					$('#documentName').empty()
+				    .append('<option selected="selected">DOCUMENT TYPE</option>');
+					for(var i =0 ;i<result.length ;i++){
+						
+						var id = result[i].id;
+						var name = result[i].documentName;
+						var option = new Option(name,id );
+						$('#documentName').append($(option));
+					}
+				} else {
+					showAlert("Error while filter sub-module from module.", "Error");
+					hideSpinner();
+				} 
+			},
+			failure : function() {
+				showAlert("Error while filter sub-module from module.", "Error");
+				hideSpinner();
+				return;
+			},
+			error : function() {
+				showAlert("Error while filter sub-module from module.", "Error");
+				hideSpinner();
+				return;
+			}
+		});
+		
+	}
+	
+	
+	function submitForm(){
+		document.getElementById('deleteForm').submit();
+	}
+	
+	
+		
+</script>
+</head>
+
+    <body>
+        <div class="main-wrapper">
+            <div class="app" id="app">
+                 <div th:replace="/fragments/component :: header" />
+				<div th:replace="/fragments/component :: sidebar" />
+                <div class="sidebar-overlay" id="sidebar-overlay"></div>
+                <article class="content dashboard-page">
+                <form method="POST"	th:action="@{/onboarding/deleteById}" enctype="multipart/form-data" id="deleteForm">
+                    <section class="section">
+                        <div class="row sameheight-container">
+                            <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+                                <div class="card">
+                                <div class="card-header card-header-sm bordered">
+								   <div class="header-block">
+                                     <h3 class="title">Create</h3> 
+								   </div>
+								  </div>
+                                  <div class="card-block card-sd">
+                                      <div class="row">
+                                          <div class="col-sm-12"><p>Step 1: Select Document type to upload PDF Format</p></div>
+                                          <div class="col-sm-4">
+                                          <div class="select-itmes">
+                                            <select class="c-select boxed form-control form-control-sm" id="documentType" name="documentTypeId" onchange="getSubmoduleOnModuleSelection()" >
+                                            </select>
+                                           </div>
+                                          </div>
+                                           
+                                          <!-- <div class="col-sm-2">
+                                            <button class="btn btn-primary btn-p" type="button">Go</button>
+                                           </div>	 -->	
+                                        </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Step 2: Name of new document form</p></div>
+                                          <div class="col-sm-4">
+                                          <div class="select-itmes">
+                                            
+                                            <select class="c-select boxed form-control form-control-sm" id="documentName" name="documentNameId"  >
+                                              <option>DOCUMENT TYPE</option>
+                                            </select>
+                                          
+                                           </div>
+                                          </div>
+                                         	
+                                        </div>
+                                      
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                          <p>&nbsp;</p>
+                                          <p>Upload Document Form in PDF Format</p></div>
+                                          <div class="col-sm-12">
+                                            <!-- <div class="row">                                                
+                                                <div class="col-sm-4">
+                                                <div class="form-group"> 
+                                                    <div class="pull-left" style="margin-top:8px;">
+                                                    <input type="radio" id="yes"> <label for="yes">Yes  &nbsp; &nbsp;</label>
+                                                    
+                                                    </div>
+                                                    
+                                                    <input type="file" class="form-control boxed" name="pdfFile">
+                                                    <button class="btn btn-primary btn-lg" type="button">Go</button>
+                                                </div>
+                                                </div>
+                                              </div> -->
+                                                
+                                                <div class="row">
+                                                <div class="col-sm-12">
+                                                <button class="btn btn-primary btn-p" type="button" onclick="submitForm()">Delete</button>
+                                                </div>
+                                                
+                                                </div>
+                                                
+                                                
+                                            </div>		
+                                        </div>
+                                     
+                                  </div>
+                                    
+                                  </div>
+                            </div>
+                        </div>
+                    </section>
+                    </form>
+                </article>
+                	<div th:replace="/fragments/component :: footer" />
+                <div class="modal fade" id="modal-media">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title">Media Library</h4> </div>
+                            <div class="modal-body modal-tab-container">
+                                <ul class="nav nav-tabs modal-tabs" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" href="#gallery" data-toggle="tab" role="tab">Gallery</a> </li>
+                                    <li class="nav-item"> <a class="nav-link active" href="#upload" data-toggle="tab" role="tab">Upload</a> </li>
+                                </ul>
+                                <div class="tab-content modal-tab-content">
+                                    <div class="tab-pane fade" id="gallery" role="tabpanel">
+                                        <div class="images-container">
+                                            <div class="row"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade active in" id="upload" role="tabpanel">
+                                        <div class="upload-container">
+                                            <div id="dropzone">
+                                                <form action="/" method="POST" enctype="multipart/form-data" class="dropzone needsclick dz-clickable" id="demo-upload">
+                                                    <div class="dz-message-block">
+                                                        <div class="dz-message needsclick"> Drop files here or click to upload. </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Insert Selected</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <div class="modal fade" id="confirm-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title"><i class="fa fa-warning"></i> Alert</h4> </div>
+                            <div class="modal-body">
+                                <p>Are you sure want to do this?</p>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button> <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+        <script src="js/vendor.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Macro</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+ <script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script> 
+	
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+				
+					<div class="row">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-12 col-xl-12 history-col industry-view">
+							<div class="header-block">
+										<h3 class="title">Product View</h3>
+									<div class="btn-actions"><span>Do you wish to approve the data.</span>
+									<button class="btn btn-primary btn-sm rounded pull-right"
+															type="button" onclick="noapproveProduct();">No</button>
+														<button
+															class="btn btn-success btn-sm  space-btn rounded pull-right"
+															type="button" onclick="approveProductData();">Yes</button>
+									</div>
+									</div><div class="clearfix"></div>
+							<div class="card sameheight-item" data-exclude="xs">
+								<div class="card-header card-header-sm bordered">
+									
+									<ul class="nav nav-tabs" role="tablist">
+										
+										<li class="nav-item"><a class="nav-link active"
+											href="#tabProductOverview" role="tab" data-toggle="tab" id="FTP" 
+											>ProductOverview </a></li>
+									<li class="nav-item"><a class="nav-link" 
+											href="#tabProductThresholds" role="tab" data-toggle="tab" id="ProductThresholds"  
+											>ProductThresholds</a></li>
+										
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabProductPrograms" role="tab" data-toggle="tab" id="ProductPrograms"  
+											>ProductPrograms</a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabCompetitionDimension" role="tab" data-toggle="tab" id="CompetitionDimension"  
+											>CompetitionDimension </a></li>
+											
+									
+									</ul>
+									
+								
+									
+								</div>
+								<div class="card-block">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active fade in" id="tabProductOverview">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+														<!-- 	<th>productLevel</th> -->
+															<th>productName</th>
+															<th>detailType</th>
+															<th>detailTitle</th>
+															<th>detailValue</th>
+															
+															
+														</tr>
+														</thead>
+														<tbody>
+														 <tr th:if="${data.ProductOverview != null}" th:each="key,iterStat : ${data.ProductOverview}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													       <!--  <td th:text="${key.productLevel}"></td> -->
+													        <td th:if="${key.productName != null}" th:text="${key.productName}"></td>
+													        <td th:if="${key.detailType != null}" th:text="${key.detailType}"></td>
+													         <td th:if="${key.detailTitle != null}" th:text="${key.detailTitle}"></td>
+													        <td th:if="${key.detailValue != null}" th:text="${key.detailValue}"></td>
+													        
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										 <div role="tabpanel" class="tab-pane fade" id="tabProductThresholds">
+											<div class="table-responsive">
+												<table id="archeTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productName</th>
+															<!-- <th>productLevel</th> -->
+															<th>parameterName</th>
+															<th>parameterType</th>
+															<th>parameterThreshold</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.ProductThresholds != null}" th:each="key,iterStat : ${data.ProductThresholds}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:if="${key.productName != null}" th:text="${key.productName}"></td>
+													       <!--  <td th:text="${key.productLevel}"></td> -->
+													        <td th:if="${key.parameterName != null}" th:text="${key.parameterName}"></td>
+													        <td th:if="${key.parameterType != null}" th:text="${key.parameterType}"></td>
+													        <td th:if="${key.parameterThreshold != null}" th:text="${key.parameterThreshold}"></td>
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+										  <div role="tabpanel" class="tab-pane fade" id="tabProductPrograms">
+											<div class="table-responsive">
+												<table id="tabBCMPackages"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>preApprovedLimit</th>
+															<th>collateralizedLimit </th>
+															<th>productName </th>
+															<th>clientId</th>
+															
+															
+															
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.ProductPrograms != null}" th:each="key,iterStat : ${data.ProductPrograms}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:if="${key.preApprovedLimit != null}" th:text="${key.preApprovedLimit}"></td>
+													        <td th:if="${key.collateralizedLimit != null}" th:text="${key.collateralizedLimit}"></td>
+													        <td th:if="${key.collateralizedLimit != null}" th:text="${key.productName}"></td>
+													        <td th:if="${key.collateralizedLimit != null}" th:text="${key.clientId}"></td>
+													       
+													    </tr>
+													    <tbody>
+												
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+							 <div role="tabpanel" class="tab-pane fade" id="tabCompetitionDimension">
+											<div class="table-responsive">
+												<table id="businessFlowSettingsTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productName</th>
+														<!-- 	<th>productLevel</th> -->
+															<th>competitionDimension</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.CompetitionBenchmarking != null}" th:each="key,iterStat : ${data.CompetitionBenchmarking}" th:object="${key}">
+													        <td th:text="${iterStat.count}"></td>
+													        <td th:if="${key.productName != null}" th:text="${key.productName}"></td>
+													       <!--  <td th:text="${key.productLevel}"></td> -->
+													        <td th:if="${key.competitionDimension != null}" th:text="${key.competitionDimension}"></td>
+													    </tr>
+													   </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+			<div th:replace="/fragments/component :: footer" />
+		</div>
+	</div>
+</body>
+</html>

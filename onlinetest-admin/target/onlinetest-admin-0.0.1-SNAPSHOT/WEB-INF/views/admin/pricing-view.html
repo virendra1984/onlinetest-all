@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Macro</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+ <script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script> 
+	
+	
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+				
+					<div class="row">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-12 col-xl-12 history-col industry-view">
+							<div class="header-block">
+										<h3 class="title">Pricing View</h3>
+									<div class="btn-actions"><span>Do you wish to approve the data.</span>
+									<button class="btn btn-primary btn-sm rounded pull-right"
+															type="button" onclick="noapprovePricing();">No</button>
+														<button
+															class="btn btn-success btn-sm  space-btn rounded pull-right"
+															type="button" onclick="approvePricingData();">Yes</button>
+									</div>
+									</div><div class="clearfix"></div>
+							<div class="card sameheight-item" data-exclude="xs">
+								<div class="card-header card-header-sm bordered">
+									
+									<ul class="nav nav-tabs" role="tablist">
+										
+										<li class="nav-item"><a class="nav-link active"
+											href="#FTPTable" role="tab" data-toggle="tab" id="FTP" 
+											>FTP </a></li>
+										 <li class="nav-item"><a class="nav-link" 
+											href="#tabBCMPricingTable" role="tab" data-toggle="tab" id="BCMPricingTable"  
+											>BCM Pricing Table </a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabBCMPackages" role="tab" data-toggle="tab" id="BCMPackages"  
+											>BCMPackages</a></li>
+										
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabOpsRisk" role="tab" data-toggle="tab" id="OpsRisk"  
+											>OpsRisk</a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabLGD" role="tab" data-toggle="tab" id="LGD"  
+											>LGD </a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabEAD" role="tab" data-toggle="tab" id="vcc"  
+											>EAD</a></li> 
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabBackendAssumptions" role="tab" data-toggle="tab" id="BackendAssumptions"  
+											>BackendAssumptions</a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabProductECMapping" role="tab" data-toggle="tab" id="ProductECMapping"  
+											>ProductECMapping  </a></li> 
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabOPEX" role="tab" data-toggle="tab" id="OPEX"  
+											> OPEX </a></li>
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabPD" role="tab" data-toggle="tab" id="PD"  
+											> PD </a></li>
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabExpense" role="tab" data-toggle="tab" id="Expense"  
+											> Expense </a></li>
+											
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabCurrency" role="tab" data-toggle="tab" id="Currency"  
+											> Currency </a></li>
+										<li class="nav-item"><a class="nav-link" 
+											href="#tabEC" role="tab" data-toggle="tab" id="EC"  
+											> EC </a></li>
+									</ul>
+									
+								
+									
+								</div>
+								<div class="card-block">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active fade in" id="FTPTable">
+											<div class="table-responsive">
+												<table id="FTPTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Currency</th>
+															<th>FTP</th>
+															
+														</tr>
+														</thead>
+														<tbody>
+														 <tr th:if="${data.FTP != null }" th:each="key,iterStat : ${data.FTP}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.currency != null }" th:text="${key.currency}"></td>
+													        <td th:if="${key.FTP != null }" th:text="${key.FTP}"></td>
+													        
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+
+										</div>
+										 <div role="tabpanel" class="tab-pane fade" id="tabBCMPricingTable">
+											<div class="table-responsive">
+												<table id="archeTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>level3Name</th>
+															<th>level4Name</th>
+															<th>priceTier1</th>
+															<th>priceTier2</th>
+															<th>priceTier3</th>
+															
+															<th>priceTier4</th>
+															<th>volumeTier1</th>
+															<th>volumeTier2</th>
+															<th>volumeTier3</th>
+															<th>volumeTier4</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.BCMPricingTable != null }" th:each="key,iterStat : ${data.BCMPricingTable}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.level3Name != null }" th:text="${key.level3Name}"></td>
+													        <td th:if="${key.level4Name != null }" th:text="${key.level4Name}"></td>
+													        <td th:if="${key.priceTier1 != null }" th:text="${key.priceTier1}"></td>
+													        <td th:if="${key.priceTier2 != null }" th:text="${key.priceTier2}"></td>
+													        <td th:if="${key.priceTier3 != null }" th:text="${key.priceTier3}"></td>
+													        
+													        <td th:if="${key.priceTier4 != null }" th:text="${key.priceTier4}"></td>
+													        <td th:if="${key.volumeTier1 != null }" th:text="${key.volumeTier1}"></td>
+													        <td th:if="${key.volumeTier2 != null }" th:text="${key.volumeTier2}"></td>
+													        <td th:if="${key.volumeTier3 != null }" th:text="${key.volumeTier3}"></td>
+													        <td th:if="${key.volumeTier4 != null }" th:text="${key.volumeTier4}"></td>
+													    </tr>
+													</tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+										 <div role="tabpanel" class="tab-pane fade" id="tabBCMPackages">
+											<div class="table-responsive">
+												<table id="tabBCMPackages"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>level2Name</th>
+															<th>level2Name </th>
+															<th>featureType </th>
+															<th>classicValue</th>
+															<th>goldValue</th>
+															<th>platinumValue</th>
+															
+															
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.BCMPackages != null }" th:each="key,iterStat : ${data.BCMPackages}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.level2Name != null }" th:text="${key.level2Name}"></td>
+													        <td th:if="${key.level2Name != null }" th:text="${key.level2Name}"></td>
+													        <td th:if="${key.featureType != null }" th:text="${key.featureType}"></td>
+													        <td th:if="${key.classicValue != null }" th:text="${key.classicValue}"></td>
+													        <td th:if="${key.goldValue != null }" th:text="${key.goldValue}"></td>
+													        <td th:if="${key.platinumValue != null }" th:text="${key.platinumValue}"></td>
+													       
+													    </tr>
+													    <tbody>
+												
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+							 <div role="tabpanel" class="tab-pane fade" id="tabOpsRisk">
+											<div class="table-responsive">
+												<table id="businessFlowSettingsTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productLevel1Name</th>
+															<th>productLevel2Name</th>
+															<th>productLevel3Name</th>
+															<th>productGroup</th>
+															<th>beta</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.OpsRisk != null }" th:each="key,iterStat : ${data.OpsRisk}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.productLevel1Name != null }" th:text="${key.productLevel1Name}"></td>
+													        <td th:if="${key.productLevel2Name != null }" th:text="${key.productLevel2Name}"></td>
+													        <td th:if="${key.productLevel3Name != null }" th:text="${key.productLevel3Name}"></td>
+													        <td th:if="${key.productGroup != null }" th:text="${key.productGroup}"></td>
+													        <td th:if="${key.beta != null }" th:text="${key.beta}"></td>
+													    </tr>
+													   </tbody>
+													
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+										 <div role="tabpanel" class="tab-pane fade" id="tabLGD">
+											<div class="table-responsive">
+												<table id="tabsegmentsTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>annualEAD</th>
+															<th>LLGD</th>
+															<th>DLGD</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.LGD != null }" th:each="key,iterStat : ${data.LGD}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.annualEAD != null }" th:text="${key.annualEAD}"></td>
+													        <td th:if="${key.LLGD != null }" th:text="${key.LLGD}"></td>
+													        <td th:if="${key.DLGD != null }" th:text="${key.DLGD}"></td>
+													    </tr>
+													    <tbody>
+													
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+										 <div role="tabpanel" class="tab-pane fade" id="tabEAD">
+											<div class="table-responsive">
+												<table id="EAD"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productLevel3Name</th>
+															<th>utilization</th>
+															<th>EADDividedByLimit</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.EAD != null }" th:each="key,iterStat : ${data.EAD}" th:object="${key}">
+													        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+													        <td th:if="${key.productLevel3Name != null }" th:text="${key.productLevel3Name}"></td>
+													        <td th:if="${key.utilization != null }" th:text="${key.utilization}"></td>
+													        <td th:if="${key.EADDividedByLimit != null }" th:text="${key.EADDividedByLimit}"></td>
+													    </tr>
+													    <tbody>
+													
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+										
+										<div role="tabpanel" class="tab-pane fade" id="tabBackendAssumptions">
+											<div class="table-responsive">
+												<table id="tabindustryInsightsTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>assumption</th>
+															<th>assumptionValue</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.BackendAssumptions != null }" th:each="key,iterStat : ${data.BackendAssumptions}" th:object="${key}">
+															
+														        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														        <td th:if="${key.assumption != null }" th:text="${key.assumption}"></td>
+														        <td th:if="${key.assumptionValue != null }" th:text="${key.assumptionValue}"></td>
+													       
+													    </tr>
+													    <tbody>
+													
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div> 
+										
+										 <div role="tabpanel" class="tab-pane fade" id="tabProductECMapping">
+											<div class="table-responsive">
+												<table id="ProductECMappingTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productLevel3Name</th>
+															<th>ECMapping</th>
+														
+														</tr>
+														</thead>
+														<tbody>
+														<tr th:if="${data.ProductECMapping != null }" th:each="key,iterStat : ${data.ProductECMapping}" th:object="${key}">
+															
+															
+															        <td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+															        <td th:if="${key.productLevel3Name != null }" th:text="${key.productLevel3Name}"></td>
+															         <td th:if="${key.ECMapping != null }" th:text="${key.ECMapping}"></td>
+															      
+														      
+															
+													    </tr>
+													    </tbody>
+													
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										 <div role="tabpanel" class="tab-pane fade" id="tabOPEX">
+											<div class="table-responsive">
+												<table id="tabOPEXTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>productLevel2Name</th>
+															<th>productLevel3Name</th>
+															<th>OPEXMultiplier</th>
+															<th>isProductFunded</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+																 
+															<tr th:if="${data.OPEX != null }" th:each="key,iterStat : ${data.OPEX}" th:object="${key}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														         <td th:if="${key.productLevel2Name != null }" th:text="${key.productLevel2Name}"></td>
+														         <td th:if="${key.productLevel3Name != null }" th:text="${key.productLevel3Name}"></td>
+														        <td th:if="${key.OPEXMultiplier != null }" th:text="${key.OPEXMultiplier}"></td>
+														        <td th:if="${key.isProductFunded != null }" th:text="${key.isProductFunded}"></td>
+														        
+													        </tr>
+													    
+													  
+													 </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+										
+										<div role="tabpanel" class="tab-pane fade" id="tabPD">
+											<div class="table-responsive">
+												<table id="tabPDTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>BRR</th>
+															<th>PD</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+																 
+															<tr th:if="${data.PD != null }" th:each="key,iterStat : ${data.PD}" th:object="${key}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														        <td th:if="${key.BRR != null }" th:text="${key.BRR}"></td>
+														        <td th:if="${key.PD != null }" th:text="${key.PD}"></td>
+														        
+													        </tr>
+													    
+													  
+													 </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+										
+										<div role="tabpanel" class="tab-pane fade" id="tabExpense">
+											<div class="table-responsive">
+												<table id="tabExpenseTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>totalLimitLowRange</th>
+															<th>totalLimitHighRange</th>
+															<th>expenseFactor</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+																 
+															<tr th:if="${data.Expense != null }" th:each="key,iterStat : ${data.Expense}" th:object="${key}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														        <td th:if="${key.totalLimitLowRange != null }" th:text="${key.totalLimitLowRange}"></td>
+														        <td th:if="${key.totalLimitHighRange != null }" th:text="${key.totalLimitHighRange}"></td>
+														        <td th:if="${key.expenseFactor != null }" th:text="${key.expenseFactor}"></td>
+														        
+													        </tr>
+													    
+													  
+													 </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane fade" id="tabCurrency">
+											<div class="table-responsive">
+												<table id="tabCurrencyTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>currency</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+																 
+															<tr th:if="${data.Currency != null }" th:each="key,iterStat : ${data.Currency}" th:object="${key}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														        <td th:if="${key.currency != null }" th:text="${key.currency}"></td>
+														        
+														        
+													        </tr>
+													    
+													  
+													 </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+										<div role="tabpanel" class="tab-pane fade" id="tabEC">
+											<div class="table-responsive">
+												<table id="tabECTable"	class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>PD</th>
+															<th>DLGD</th>
+															<th>firstSetEC</th>
+															<th>secondSetEC</th>
+														</tr>
+														</thead>
+														<tbody>
+														
+																 
+															<tr th:if="${data.EC != null }" th:each="key,iterStat : ${data.EC}" th:object="${key}">
+																<td th:if="${iterStat.count != null }" th:text="${iterStat.count}"></td>
+														        <td th:if="${key.PD != null }" th:text="${key.PD}"></td>
+														         <td th:if="${key.DLGD != null }" th:text="${key.DLGD}"></td>
+														         <td th:if="${key.firstSetEC != null }" th:text="${key.firstSetEC}"></td>
+														         <td th:if="${key.secondSetEC != null }" th:text="${key.secondSetEC}"></td>
+														        
+														        
+													        </tr>
+													    
+													  
+													 </tbody>
+													</table>
+											</div>
+											<div class="clearfix"></div>
+
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+
+			<div th:replace="/fragments/component :: footer" />
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

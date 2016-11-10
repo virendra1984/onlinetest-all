@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>SCB | Document URL</title>
+    <object th:include="/fragments/header :: head" th:remove="tag" />
+
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            $("#uploadForm").submit(function(e) {
+                e.preventDefault();
+                var $form = $("#uploadForm");
+                var fd = new FormData($(this)[0]);
+
+                var filename = $("#msg").val();
+
+                var extension = filename.replace(/^.*\./, '');
+                var string = checkMe();
+
+                var arr = 'pdf';//string.split(',');
+
+                if(filename == ''){
+                    alert("Select File First.");
+                }else{
+                    /* 	if($.inArray(extension, arr) > -1){ */
+                    if(extension=="pdf"){
+                        myAjax($form,fd);
+                    }else{
+                        alert('your File extension is wrong. It should be pdf');
+                        $("#msg").val("");
+                    }
+                }
+
+                console.info(fd);
+
+            });
+
+            function myAjax($form,fd){
+                $.ajax({
+                    type : 'POST',
+                    url : $form.attr('action'),
+                    data : fd,
+                    cache : false,
+                    processData : false,
+                    contentType : false,
+                    beforeSend: function() {   $('#myModal').modal('show'); $("#msg").val(""); },
+                    complete: function() {   $('#myModal').modal('hide');  },
+                    success : function(response) {
+                        /*  document.getElementById("view").style.display='block'; */
+
+                        alert("File has been uploaded");
+                        console.info(response);
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.info("Status: " + XMLHttpRequest);
+                        alert("Error: " + errorThrown);
+                    }
+                });
+            }
+        });
+
+        /* window.onload=function(){
+         document.getElementById("view").style.display='none';
+         } */
+    </script>
+    <script th:inline="javascript">
+
+        /*<![CDATA[*/
+
+        var extensions = /*[[${data.extensions}]]*/ 'User Name';
+
+        /*]]>*/
+        function checkMe(){
+
+            return extensions;
+        }
+
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+
+        function fillData(){
+            var industries = [[${data.industries}]];
+            var count = Object.keys(industries).length
+            var industryDropDown  = $("#industryDropDown");
+            if(industries!=null && count >0){
+
+                industryDropDown.append('<option value="-1" selected="selected">Select Industry</option>');
+                for (var key in industries){
+                    var option = '<option value="'+ key +'">'+ industries[key].NAME + "</option>";
+                    industryDropDown.append(option);
+                }
+
+
+            }else{
+            }
+        }
+        window.onload = function () { fillData(); }
+
+        function changeFunc(){
+
+            var selectBox = document.getElementById("industryDropDown");
+            var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+            if(selectedValue >0 ){
+                $("#industryId").val(selectedValue);
+            }
+        }
+
+        function chooseFile(){
+            var val= document.getElementById("msg").value;
+            if(val.length>=3){
+                document.getElementById("uploadFile").disabled =false;
+            }else{
+                document.getElementById("uploadFile").disabled = true;
+            }
+        }
+
+    </script>
+
+
+
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="app" id="app">
+        <div th:replace="/fragments/component :: header" />
+        <div th:replace="/fragments/component :: sidebar" />
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <article class="content dashboard-page">
+            <section class="section">
+                <div class="row sameheight-container">
+                    <div
+                            class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 history-col">
+                        <div class="card">
+                            <div class="card-header card-header-sm bordered">
+                                <div class="header-block">
+                                    <h3 class="title">Upload Business Flow Document</h3>
+                                    <span th:if="${isError}" th:text="${message}"></span>
+                                </div>
+                            </div>
+                            <div class="card-block card-sd">
+                                <div class="form-group-inputs">
+                                    <!-- <div class="pull-left"> -->
+                                    <!-- </div> -->
+
+                                    <form id="uploadForm" method="POST" th:action="@{/admin/fileupload/business_flow_save}"
+                                          enctype="multipart/form-data">
+                                        <div class="row form-group">
+                                            <div class="col-sm-2">
+                                                <P>Select Industry</P>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input type="hidden" id="industryId" name="industryId" /> <select  style="width: 100%"
+                                                                                                                   class="form-control form-control-sm" id="industryDropDown"
+                                                                                                                   name="industryDropDown" onchange="changeFunc();">
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-2">
+                                                <P>Source</P>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input
+                                                        name="id" value="1" type="hidden" />
+                                                <input id="msg" type="file"  style="width: 100%"
+                                                       name="pdfFile" class="form-control file" onchange="chooseFile()">
+
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-2">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-primary btn-lg btn-go pull-right" type="submit" id ="uploadFile" disabled>Upload</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <div id="myModal" class="modal">
+                                        <div class="row">
+                                            <div class="col-sm-12" style="margin-top:25%;margin-left:50%;">
+                                                <img  src="../../../resources/assets/spinner.gif"
+                                                      th:src="@{/resources/assets/spinner.gif}"  />
+                                                <span id="processMsg"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            </section>
+        </article>
+
+        <div th:replace="/fragments/component :: footer" />
+
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>

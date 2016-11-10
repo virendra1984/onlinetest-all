@@ -1,0 +1,336 @@
+<!doctype html>
+<html xmlns:th="www.thymeleaf.org">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>SCB</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+  <!--       <link rel="stylesheet" href="css/vendor.css">
+		<link rel="stylesheet" id="theme-style" href="css/app.css">
+		<link rel="stylesheet" id="theme-style" href="css/app-purple.css"> -->
+		<object th:include="/fragments/header :: head" th:remove="tag" />
+		<script type="text/javascript" src="../../js/custom.js"	th:src="@{/resources/js/custom.js}"></script>
+        <!-- Theme content -->
+        <script type="text/javascript" th:inline="javascript">
+
+function fillData(){
+	var industries = [[${industries}]];
+	var result =[[${issave}]];
+	if(result==true)
+	alert("Master note details saved successfully");
+	var count = Object.keys(industries).length
+	var industryDropDown  = $("#industryDropDown");
+	if(industries!=null && count >0){
+		
+		industryDropDown.append('<option value="-1" selected="selected">Select Industry</option>');
+		for (var key in industries){
+			var option = '<option value="'+ key +'">'+ industries[key].NAME + "</option>";
+			industryDropDown.append(option);
+		}
+	}else{
+	}
+	
+	 industries = [[${data}]];
+	 
+	 var count = Object.keys(industries).length
+		var industryDropDown  = $("#modulename");
+		if(industries!=null && count >0){
+			
+			industryDropDown.append('<option value="-1" selected="selected">Select Module</option>');
+			for (var key in industries){
+				var option = '<option value="'+ industries[key] +'">'+ getValue(industries[key]) + "</option>";
+				industryDropDown.append(option);
+			}
+		}else{
+		}
+	 
+	
+	
+	
+	
+	
+	
+}
+window.onload = function () { fillData(); }
+
+
+function changeIndustryFunc(){
+	
+	var selectBox = document.getElementById("industryDropDown");
+    var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+    if(selectedValue >0 ){ 
+	    $("#industryId").val(selectedValue);
+	    var url = "/sherlock-admin/admin/client/" + selectedValue;
+	    var clients =getClientsByIndustry(selectedValue);
+	    var clientDropDown  = $("#clientDropDown");
+	    clientDropDown.empty();
+	    clientDropDown.append('<option value="-1" selected="selected">Select Client</option>');
+	    for (var key in clients){
+			var option = '<option value="'+ key +'">'+ clients[key] + "</option>";
+			clientDropDown.append(option);
+		}
+    }
+}
+
+
+function changeClientFunc(){
+	
+	var selectBox = document.getElementById("clientDropDown");
+    var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+    if(selectedValue >0 ){ 
+	    $("#clientId").val(selectedValue);
+    }
+}
+
+
+function getSubmoduleOnModuleSelection() {
+    var str =$("#modulename").val();
+	var url = "/sherlock-admin/masterNotes/sub-module?moduleName="+str;
+	var result = "";
+	$.ajax({
+		type : "GET",
+		url : url,
+		async : false,
+		success : function(response) {
+			
+			var status = response['status'];
+			if (status == 200) {
+				hideSpinner();
+				result = response['data'];
+				$('#submodule').empty()
+			    .append('<option selected="selected">Select Sub-Module...</option>');
+				for(var i =0 ;i<result.length ;i++){
+					var option = new Option(getValue(result[i]) ,result[i]);
+					//var option = new Option(result[i], result[i]);
+					$('#submodule').append($(option));
+				}
+			} else {
+				showAlert("Error while filter sub-module from module.", "Error");
+				hideSpinner();
+			}
+		},
+		failure : function() {
+			showAlert("Error while filter sub-module from module.", "Error");
+			hideSpinner();
+			return;
+		},
+		error : function() {
+			showAlert("Error while filter sub-module from module.", "Error");
+			hideSpinner();
+			return;
+		}
+	});
+	
+}
+
+function getTypeOnSubModuleSelection() {
+	    var moduleName  =$("#modulename").val();
+	    var subModuleName = $("#submodule").val();
+		var url = "/sherlock-admin/masterNotes/sub-module-type?moduleName="+moduleName+"&subModuleName="+subModuleName;
+		var result = "";
+		$.ajax({
+			type : "GET",
+			url : url,
+			async : false,
+			success : function(response) {
+				var status = response['status'];
+				if (status == 200) {
+					hideSpinner();
+					result = response['data'];
+					$('#type').empty()
+				    .append('<option selected="selected">Select Module Type...</option>');
+					for(var i =0 ;i<result.length ;i++){
+						var option = new Option(result[i], result[i]);
+						
+						
+						$('#type').append($(option));
+					}
+				} else {
+					showAlert("Error while filter type from sub-module.", "Error");
+					hideSpinner();
+				}
+			},
+			failure : function() {
+				showAlert("Error while filter type from sub-module.", "Error");
+				hideSpinner();
+				return;
+			},
+			error : function() {
+				showAlert("Error while filter type from sub-module.", "Error");
+				hideSpinner();
+				return;
+			}
+		});
+		
+	}
+	
+</script>
+    </head>
+
+    <body>
+     <form method="POST" th:action="@{/masterNotes/saveType}"> 
+        <div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+			
+							<article class="content dashboard-page">
+                    <section class="section">
+                        <div class="row sameheight-container">
+                            <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+                                <div class="card">
+								  <div class="card-header card-header-sm bordered">
+								   <div class="header-block">
+                                     <h3 class="title">Talking Points</h3> 
+								   </div>
+								  </div>
+								<div class="card-block card-sd">
+								 <div class="preview-imaes" style="display:block;">
+								 <div class="row">								 
+								 <div class="col-xs-12 col-sm-12">
+								
+								 
+								<div class="pd-border points">
+								<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3">
+																	<label>Select Industry</label>
+																</div>
+																<div class="col-sm-4">
+																	<select class="form-control select" id="industryDropDown"
+																		style="width: 100%" onchange="changeIndustryFunc();">
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3">
+																	<label>Select client</label>
+																</div>
+																<div class="col-sm-4">
+																	<select class="form-control" id="clientDropDown"
+																		style="width: 100%" onchange="changeClientFunc();" name="clientid">
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3">
+																	<label>Select Sequence</label>
+																
+																</div>
+																<div class="col-sm-4">
+																	<select class="form-control" id="clientDropDown"
+																		style="width: 100%" name="sequence">
+																		<option >Select Sequence...</option>
+																		<option value="1">1</option>
+																		<option value="2">2</option>
+																		<option value="3">3</option>
+																		<option value="4">4</option>	
+																		<option value="5">5</option>
+																		<option value="6">6</option>
+																		<option value="7">7</option>
+																		<option value="8">8</option>
+																		<option value="9">9</option>
+																		<option value="10">10</option>
+																	</select>
+																</div>
+															</div>
+														</div>
+								<div class="select-logo">
+									<div class="row form-group">
+										<div class="col-sm-3">
+											<label>Select Module</label>
+										</div>
+										<div class="col-sm-4">
+											<select class="form-control" onchange="getSubmoduleOnModuleSelection()" id="modulename" name="modulename">
+												</select>
+										</div>
+									</div>
+								</div>
+								<div class="select-logo">
+                                    <div class="row form-group">
+                                        <div class="col-sm-3">
+                                            <label>Select Sub-Module</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" id="submodule"  onchange="getTypeOnSubModuleSelection()" name="submodule" >
+                                            <option>Select Sub-Module...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="select-logo">
+                                    <!-- <div class="row form-group">
+                                        <div class="col-sm-3">
+                                            <label>Select Module Type</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" id="type" name="type">
+                                                <option>Select Module Type...</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                
+                                <div class="select-logo">
+                                    <div class="row form-group">
+                                        <div class="col-sm-3">
+                                            <label>Enter Talking Point Title</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control"  name="title"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="select-logo">
+                                    <div class="row form-group">
+                                        <div class="col-sm-3">
+                                          <!--   <label>Enter Talking Point</label> -->
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <!-- <textarea class="form-control" rows="5" name="talkingpoint"></textarea> -->
+                                            <div class="text-right">
+								<button class="btn btn-primary btn-sm rounded pull-right btn-save" type="submit">Save</button>
+								</div>
+                                        </div>
+                                    </div>
+                                </div>	
+								 
+								 </div>
+							
+								 
+								 
+								 </div>
+								 </div>
+								 </div>
+								</div>
+								<div class="clearfix"></div> 
+								</div>
+                            </div>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+                
+		<div th:replace="/fragments/component :: footer" /></div>
+        </div>
+  
+
+ 
+        <!-- Reference block for JS -->
+        <script src="js/vendor.js"></script>
+        <script src="js/app.js"></script>
+        
+        	</form> 
+    </body>
+</html>

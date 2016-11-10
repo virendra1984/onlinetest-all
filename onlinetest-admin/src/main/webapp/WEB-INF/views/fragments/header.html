@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+<meta charset="utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>SCB</title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link href="../../../resources/css/vendor.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/vendor.css}" />
+<link href="../../../resources/css/app.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/app.css}" />
+	<link href="../../../resources/css/app.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/custom.css}" />
+<link href="../../../resources/css/app-purple.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/app-purple.css}" />
+<link href="../../../resources/css/app-purple.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/font-awesome.min.css}" />
+<script type="text/javascript" src="../../js/vendor.js"
+	th:src="@{/resources/js/vendor.js}"></script>
+<script type="text/javascript" src="../../js/app.js"
+	th:src="@{/resources/js/app.js}"></script>
+</head>
+<body>
+	<div id="cbAlert" class="modal fade">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 id="alertTitle" class="modal-title" style="font-size: large;"></h4>
+				</div>
+				<div id="modalText" class="modal-body">
+					<p id="cbAlertText" class="text-warning"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Alert modal window end -->
+
+
+	<!-- Confirmation modal window start -->
+
+	<div id="cbModal" class="modal fade">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<div id="modalText" class="modal-body">
+					<p id="cbModalText" class="text-warning"></p>
+				</div>
+				<div class="modal-footer">
+					<button id="cbModelCancelButton" name="cbModelCancelButton"
+						type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="cbModelOkButton" name="cbModelOkButton" type="button"
+						class="btn btn-success">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="spinner"></div>
+</body>
+
+</html>

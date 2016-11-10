@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Document URL</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript" th:inline="javascript">
+
+
+        function fillData(){
+            var industries = [[${data.industries}]];
+            var count = Object.keys(industries).length
+            var industryDropDown  = $("#industryDropDown");
+            if(industries!=null && count >0){
+
+                industryDropDown.append('<option value="-1" selected="selected">Select Industry</option>');
+                for (var key in industries){
+                    var option = '<option value="'+ key +'">'+ industries[key].NAME + "</option>";
+                    industryDropDown.append(option);
+                }
+
+
+            }else{
+            }
+        }
+        window.onload = function () { fillData(); }
+
+        function changeFunc(){
+
+            var selectBox = document.getElementById("industryDropDown");
+            var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+            if(selectedValue >0 ){
+                $("#industryId").val(selectedValue);
+                $("#downloadUrl").attr("href", "/sherlock-admin/admin/client/download/client-profile/"+selectedValue);
+            }
+        }
+
+        function chooseFile(){
+            var val= document.getElementById("msg").value;
+            if(val.length>=3){
+                document.getElementById("uploadFile").disabled =false;
+            }else{
+                document.getElementById("uploadFile").disabled = true;
+            }
+        }
+
+    </script>
+
+
+
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+					<div class="row sameheight-container">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 history-col">
+							<div class="card">
+								<div class="card-header card-header-sm bordered">
+									<div class="header-block">
+										<h3 class="title">Upload financial document</h3>
+										<span th:if="${isError}" th:text="${message}"></span>
+									</div>
+								</div>
+								<div class="card-block card-sd">
+									<div class="form-group-inputs">
+										<!-- <div class="pull-left"> -->
+										<!-- </div> -->
+
+										<div class="row form-group">
+											<div class="col-sm-2">
+												<P>Select Industry</P>
+											</div>
+											<div class="col-sm-4">
+												<input type="hidden" id="industryId" name="industryId" /> <select
+													style="width: 100%" class="form-control form-control-sm"
+													id="industryDropDown" name="industryDropDown"
+													onchange="changeFunc();">
+												</select> <a id="downloadUrl">Download</a>
+											</div>
+										</div>
+										<div id="myModal" class="modal">
+											<div class="row">
+												<div class="col-sm-12"
+													style="margin-top: 25%; margin-left: 50%;">
+													<img src="../../../resources/assets/spinner.gif"
+														th:src="@{/resources/assets/spinner.gif}" /> <span
+														id="processMsg"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+
+			<div th:replace="/fragments/component :: footer" />
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

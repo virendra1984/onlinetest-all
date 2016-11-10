@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Macro</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function(){
+     
+	$("#uploadForm").submit(function(e) {
+	    e.preventDefault();
+	    var $form = $("#uploadForm");
+	    var fd = new FormData($(this)[0]);
+	    
+	    var filename = $("#msg").val();
+
+        var extension = filename.replace(/^.*\./, '');
+        
+        var string = checkMe();
+        
+        var arr = string.split(',');
+        
+        if(filename == ''){
+        	alert("Select File First.");
+        }else{
+        	if($.inArray(extension, arr) > -1){
+            	myAjax($form,fd);
+            }else{
+            	alert('your File extension is wrong. It should be '+string);
+    		      $("#msg").val("");
+            }	
+        }
+        
+	    console.info(fd);
+	   
+	});
+	
+	function myAjax($form,fd){
+		 $.ajax({
+		        type : 'POST',
+		        url : $form.attr('action'),
+		        data : fd,
+		        cache : false,
+		        processData : false,
+		        contentType : false,
+		        beforeSend: function() {   $('#myModal').modal('show'); $("#msg").val(""); },
+		        complete: function() {   $('#myModal').modal('hide');  },
+		        success : function(response) {
+//		        	 document.getElementById("view").style.display='block';
+		        	
+		        	 alert("File has been uploaded.");
+		            console.info(response);
+		        },
+		        error : function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.info("Status: " + XMLHttpRequest);
+		            alert("Error: " + errorThrown);
+		        }
+		    });
+	}
+});
+
+/* window.onload=function(){
+	   document.getElementById("view").style.display='none';
+	 } */
+</script>
+<script th:inline="javascript">
+
+      /*<![CDATA[*/
+	    
+         var extensions = /*[[${data.imageExtension}]]*/ 'User Name';
+
+       /*]]>*/
+       function checkMe(){
+    	 
+    	   return extensions;
+       }
+       
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+
+function fillData(){
+	var industries = [[${data.industries}]];
+	var count = Object.keys(industries).length
+	var industryDropDown  = $("#industryDropDown");
+	if(industries!=null && count >0){
+		
+		industryDropDown.append('<option value="-1" selected="selected">Select Industry</option>');
+		for (var key in industries){
+			var option = '<option value="'+ key +'">'+ industries[key].NAME + "</option>";
+			industryDropDown.append(option);
+		}
+	}else{
+	}
+}
+window.onload = function () { fillData(); }
+
+
+function changeIndustryFunc(){
+	
+	var selectBox = document.getElementById("industryDropDown");
+    var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+    if(selectedValue >0 ){ 
+	    $("#industryId").val(selectedValue);
+	    var url = "/sherlock-admin/admin/client/" + selectedValue;
+	    var clients =getClientsByIndustry(selectedValue);
+	    var clientDropDown  = $("#clientDropDown");
+	    clientDropDown.empty();
+	    clientDropDown.append('<option value="-1" selected="selected">Select Client</option>');
+	    for (var key in clients){
+			var option = '<option value="'+ key +'">'+ clients[key] + "</option>";
+			clientDropDown.append(option);
+		}
+    }
+}
+
+function changeClientFunc(){
+	
+	var selectBox = document.getElementById("clientDropDown");
+    var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+    if(selectedValue >0 ){ 
+	    $("#clientId").val(selectedValue);
+    }
+}
+
+function chooseFile(){
+	   var val= document.getElementById("msg").value;
+	   if(val.length>=3){
+		   document.getElementById("uploadFile").disabled =false;
+	   }else{
+		   document.getElementById("uploadFile").disabled = true;
+	   }
+}
+</script>
+</head>
+<body>
+
+
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+			<article class="content dashboard-page">
+				<section class="section">
+					<div class="row sameheight-container">
+						<div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+							<div class="card">
+								<div class="card-header card-header-sm bordered">
+									<div class="header-block">
+										<h3 class="title">Client Logos</h3>
+									</div>
+								</div>
+								<div class="card-block card-sd">
+									<div class="preview-imaes" style="display: block;">
+										<p class="up-img">Upload Image</p>
+										<div class="row">
+											<div class="col-xs-12 col-sm-12 col-md-12">
+												<div class="pd-border points">
+													<div class="form-group-inputs">
+														<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3">
+																	<label>Select Industry</label>
+																</div>
+																<div class="col-sm-4">
+																	<select class="form-control" id="industryDropDown"
+																		style="width: 100%" onchange="changeIndustryFunc();">
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3">
+																	<label>Select client</label>
+																</div>
+																<div class="col-sm-4">
+																	<select class="form-control" id="clientDropDown"
+																		style="width: 100%" onchange="changeClientFunc();">
+																	</select>
+																</div>
+															</div>
+														</div>
+														<form method="POST" id="uploadForm"
+															th:action="@{/admin/fileupload/client/logo}"
+															enctype="multipart/form-data">
+															<div class="file-upload form">
+																<div class="row form-group">
+																	<div class="col-sm-3">
+																		<label>Select Logo</label>
+																	</div>
+																	<div class="col-sm-4">
+																		<input id="msg" type="file" name="imageFile" class="form-control file" style="width:100%" onchange="chooseFile()" /> 
+																		<input type="hidden"
+																			id="industryId" /> <input type="hidden"
+																			id="clientId" name="clientId" />
+																	</div>
+																</div>
+															</div>
+															<div class="select-logo">
+															<div class="row form-group">
+																<div class="col-sm-3"> </div>
+																<div class="col-sm-4">
+																	<div class="text-right">
+																	<button
+																	class="btn btn-primary btn-sm rounded pull-right"
+																	type="submit" id ="uploadFile" disabled>Upload</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+															
+															
+														</form>
+														<div id="myModal" class="modal">
+															<div class="row">
+																<div class="col-sm-12" style="margin-top:25%;margin-left:50%;">
+																	<img  src="../../../resources/assets/spinner.gif"
+																		th:src="@{/resources/assets/spinner.gif}"  />
+																	 <span id="processMsg"></span>
+																 </div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+			<div th:replace="/fragments/component :: footer" />
+		</div>
+	</div>
+</body>
+</html>

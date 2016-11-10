@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB | Client Wallet</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+
+
+
+<script th:inline="javascript">
+       function chooseFile(){
+    	   var val= document.getElementById("msg").value;
+    	   if(val.length>=3){
+    		   document.getElementById("uploadFile").disabled =false;
+    	   }else{
+    		   document.getElementById("uploadFile").disabled = true;
+    	   }
+       }
+</script> 
+
+
+</head>
+
+<body>
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+			<article class="content dashboard-page">
+				<section class="section">
+					<div class="row sameheight-container">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 history-col">
+							<div class="card">
+								<div class="card-header card-header-sm bordered">
+									<div class="header-block">
+										<h3 class="title">Client Wallet</h3>
+										<span th:if="${isError}" th:text="${message}"></span>
+									</div>
+								</div>
+								<div class="card-block card-sd">
+									<p>
+										<b>Upload Client Wallet</b>
+									</p>
+
+									<div class="form-group-inputs">
+										<form method="POST" th:action="@{/admin/clientwallet}"
+											enctype="multipart/form-data"> 
+											<label class="control-label">Source</label> <input
+												type="file" id="msg" name="walletFile" class="form-control file" onchange="chooseFile()">
+											<button class="btn btn-primary btn-lg btn-go" type="submit" id ="uploadFile" disabled>Upload</button>
+										</form>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+
+			<div th:replace="/fragments/component :: footer" />
+
+		</div>
+	</div>
+
+
+</body>
+</html>

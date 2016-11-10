@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>SCB Dashboard</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+</head>
+<body>
+<body>
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+			<article class="content dashboard-page">
+				<section class="section">
+					<div class="row sameheight-container">
+						<div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+							<div class="dashboard-title">Your Recent Activity</div>
+							<div class="table-responsive">
+									<table id="tabvccTable"
+										class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<th>History id</th>
+												<th>Section Name</th>
+												<th>Uploaded by</th>
+												<th>Uploaded Date</th>
+												<th>File</th>
+												<th>Download</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:if="${history != null }" th:each="history : ${history}">
+												<td th:if="${history.id != null }" th:text="${history.id}"></td>
+												<td th:if="${history.sectionName != null }" th:text="${history.sectionName}"></td>
+												<td th:if="${history.userName != null }" th:text="${history.userName}"></td>
+												<td th:if="${history.uploadDate != null }" th:text="${history.uploadDate}"></td>
+												<td th:if="${history.originalFileName != null }" th:text="${history.originalFileName}"></td>
+												<td><a th:if="${history.id != null }" th:href="@{/admin/history/} + ${history.id}">Download</a></td>
+											</tr>
+										<tbody>
+									</table>
+									<div class="clearfix"></div>
+
+								</div>
+						</div>
+					</div>
+				</section>
+			</article>
+		</div>
+	</div>
+	<div th:replace="/fragments/component :: footer" />
+ 
+	</div>
+	</div>
+</body>
+</html>

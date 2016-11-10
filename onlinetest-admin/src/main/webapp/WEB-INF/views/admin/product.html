@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>SCB | Product</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<script type="text/javascript" src="../../js/custom.js"
+	th:src="@{/resources/js/custom.js}"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function(){
+     
+	$("#uploadForm").submit(function(e) {
+	    e.preventDefault();
+	    var $form = $("#uploadForm");
+	    var fd = new FormData($(this)[0]);
+	    
+	    var filename = $("#msg").val();
+
+        var extension = filename.replace(/^.*\./, '');
+        
+        var string = getFileExtention();
+        
+        var arr = string.split(',');
+        
+        if(filename == ''){
+        	alert("Select File First.");
+        }else{
+        	if($.inArray(extension, arr) > -1){
+            	myAjax($form,fd);
+            }else{
+            	alert('your File extension is wrong. It should be '+string);
+    		      $("#msg").val("");
+            }	
+        }
+        
+	    console.info(fd);
+	   
+	});
+	
+	$("#imageuploadForm").submit(function(e) {
+	    e.preventDefault();
+	    var $form = $("#imageuploadForm");
+	    var fd = new FormData($(this)[0]);
+	    
+	    var filename = $("#imageupload").val();
+
+        var extension = filename.replace(/^.*\./, '');
+        
+        var string = getImgExtention();
+        
+        var arr = string.split(',');
+        
+        if(filename == ''){
+        	alert("Select File First.");
+        }else{
+        	if($.inArray(extension, arr) > -1){
+            	myAjax($form,fd);
+            }else{
+            	alert('your File extension is wrong. It should be '+string);
+    		      $("#imageupload").val("");
+            }	
+        }
+        
+	    console.info(fd);
+	   
+	});
+	
+	$("#pdfuploadForm").submit(function(e) {
+	    e.preventDefault();
+	    var $form = $("#pdfuploadForm");
+	    var fd = new FormData($(this)[0]);
+	    
+	    var filename = $("#pdfupload").val();
+
+        var extension = filename.replace(/^.*\./, '');
+        
+        var string = "pdf";
+        
+        var arr = string.split(',');
+        
+        if(filename == ''){
+        	alert("Select File First.");
+        }else{
+        	if($.inArray(extension, arr) > -1){
+            	myAjax($form,fd);
+            }else{
+            	alert('your File extension is wrong. It should be '+string);
+    		      $("#pdfupload").val("");
+            }	
+        }
+        
+	    console.info(fd);
+	   
+	});
+	
+	function myAjax($form,fd){
+		 $.ajax({
+		        type : 'POST',
+		        url : $form.attr('action'),
+		        data : fd,
+		        cache : false,
+		        processData : false,
+		        contentType : false,
+		        beforeSend: function() {   $('#myModal').modal('show'); $("#msg").val(""); $("#imageupload").val(""); $("#pdfupload").val(""); },
+		        complete: function() {   $('#myModal').modal('hide');  },
+		        success : function(response) {
+		        	 document.getElementById("view").style.display='block';
+		        	
+		        	 alert("File has been uploaded. Please click View and Approve to push the data to Sherlock.");
+		            console.info(response);
+		        },
+		        error : function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.info("Status: " + XMLHttpRequest);
+		            alert("Error: " + errorThrown);
+		        }
+		    });
+	}
+});
+
+/* window.onload=function(){
+	   document.getElementById("view").style.display='none';
+	 } */
+</script>
+<script th:inline="javascript">
+
+      /*<![CDATA[*/
+	    
+         var extensions = /*[[${data.extensions}]]*/ 'User Name';
+         var imgextensions = /*[[${data.imgextensions}]]*/ 'User Name';
+
+       /*]]>*/
+       function getFileExtention(){
+    	 
+    	   return extensions;
+       }
+       function getImgExtention(){
+      	 
+    	   return imgextensions;
+       }
+       
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+	function getProducts() {
+		var products = getProductByLevel(2);
+		populateProductDropDown(products);
+	}
+
+	function populateProductDropDown(products) {
+		var productDropDown = $("#productDropDown");
+
+		if (products != null && products.length > 0) {
+
+			productDropDown.empty();
+			productDropDown
+					.append('<option value="-1" selected="selected">Select Product</option>');
+
+			for (var i = 0; i < products.length; i++) {
+				var option = '<option value="'+ products[i].id +'">'
+						+ products[i].productName + "</option>";
+				productDropDown.append(option);
+			}
+		}
+	}
+
+	function changeFunc() {
+
+		var selectBox = document.getElementById("productDropDown");
+		var selectedValue = parseInt(selectBox.options[selectBox.selectedIndex].value);
+		if (selectedValue > 0) {
+			$("#productId_1").val(selectedValue);
+			$("#productId_2").val(selectedValue);
+		}
+	}
+	
+	   function chooseFile(){
+    	   var val= document.getElementById("msg").value;
+    	   if(val.length>=3){
+    		   document.getElementById("step2").disabled =false;
+    	   }else{
+    		   document.getElementById("step2").disabled = true;
+    	   }
+       }
+
+</script>
+
+<!-- Theme content -->
+</head>
+
+<body>
+	<div class="main-wrapper">
+		<div class="app" id="app">
+			<div th:replace="/fragments/component :: header" />
+			<div th:replace="/fragments/component :: sidebar" />
+
+			<div class="sidebar-overlay" id="sidebar-overlay"></div>
+			<article class="content dashboard-page">
+				<section class="section">
+					<div class="row">
+						<div
+							class="col col-xs-12 col-sm-12 col-md-12 col-xl-12 history-col">
+							<div class="card sameheight-item" data-exclude="xs">
+								<div class="card-header card-header-sm bordered">
+									<div class="tabs-block">
+										<ul class="nav nav-tabs" role="tablist">
+											<li class="nav-item"><a class="nav-link active"
+												href="#excel" role="tab" data-toggle="tab">Product Data
+													– Excel Format</a></li>
+											<li class="nav-item"><a class="nav-link" href="#pdf"
+												role="tab" data-toggle="tab" onclick="getProducts();">Product
+													Data – Image/PDF Format</a></li>
+										</ul>
+									</div>
+								</div>
+								<div class="card-block">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active fade in"
+											id="excel">
+											<div class="card">
+												<div class="card-block card-sd">
+													<p>
+														<b>Step 1: </b>Upload Product data
+													</p>
+													<div class="form-group-inputs">
+														<form id="uploadForm" method="POST" th:action="@{/admin/product/upload}"
+															enctype="multipart/form-data">
+															<!-- <label class="control-label">Source</label> --> 
+															<input id="msg"
+																type="file" class="form-control boxed"
+																name="productFile" onchange="chooseFile()"/>
+															<button class="btn btn-primary btn-lg btn-go" type="Submit"	id="step2"  disabled >Upload</button>
+														</form>
+														<div id="myModal" class="modal">
+															<div class="row">
+																<div class="col-sm-12" style="margin-top:25%;margin-left:50%;">
+																	<img  src="../../../resources/assets/spinner.gif"
+																		th:src="@{/resources/assets/spinner.gif}"  />
+																	 <span id="processMsg"></span>
+																 </div>
+															</div>
+														</div>
+														<div class="approve-imaes"  id="view" style="display:none;">
+													<p>
+														<a class="btn btn-primary btn-preview" th:href="@{/admin/product/view}"> View and Approve </a>
+														<!-- <button class="btn btn-primary btn-sm rounded pull-right"
+															type="button">No</button>
+														<button
+															class="btn btn-success space-btn rounded pull-right"
+															type="button" style="    margin-right: 10px;
+    background: #dd9b21;
+    border-color: #dd9b21;">Yes</button> -->
+													</p>
+												</div>
+													</div>
+													<div class="step2" style="display: none; margin-top: 20px;">
+														<div class="approve-imaes">
+															<p>
+																<b>Step 2: </b>Upload successful.<u>PREVIEW</u>
+															</p>
+														</div>
+														<div class="approve-imaes">
+															<p>
+																To approve the data?
+																<button
+																	class="btn btn-primary btn-sm rounded pull-right"
+																	type="button">No</button>
+																<button
+																	class="btn btn-success space-btn rounded pull-right"
+																	type="button">Yes</button>
+															</p>
+														</div>
+													</div>
+													<div class="clearfix"></div>
+												</div>
+											</div>
+										</div>
+										<div role="tabpanel" class="tab-pane" id="pdf">
+											<div class="card-block card-sd">
+												<div class="form-group-inputs">
+													<label class="control-label"><b>Step 1: </b>Select
+														product to upload image</label> <select id="productDropDown"
+														class="form-control boxed" onchange="changeFunc();">
+													</select> <input type="hidden" id="productId" name="productId" />
+												</div>
+												<div class="clearfix"></div>
+												<div class="form-group-inputs">
+													<label class="control-label"><b>Step 2: </b>Upload
+														Product Overview Image</label>
+													<div class="choose_file">
+														<form id="imageuploadForm" method="POST" th:action="@{/admin/product/image}"
+															enctype="multipart/form-data">
+															<input id="imageupload" type="file" class="form-control" name="imageFile" />
+															<input type="hidden" id="productId_1" name="productId_1" />
+															<button class="btn btn-primary btn-lg" type="Submit"
+																id="step2">Upload Image</button>
+														</form>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+												<div class="form-group-inputs">
+													<label class="control-label"><b>Step 3: </b>Upload
+														Product Broucher</label>
+													<div class="choose_file">
+														<form id="pdfuploadForm" method="POST" th:action="@{/admin/product/pdf}"
+															enctype="multipart/form-data">
+															<input id="pdfupload" type="file" class="form-control" name="pdfFile" />
+															<input type="hidden" id="productId_2" name="productId_2" />
+															<button class="btn btn-primary btn-lg" type="Submit"
+																id="step2">Upload Pdf</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+			<div th:replace="/fragments/component :: footer" />
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SCB | Macro</title>
+    <object th:include="/fragments/header :: head" th:remove="tag"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        function myForm(formName) {
+            var myForm = "form" + formName;
+            var myFile = "msg" + formName;
+            var form = $("#" + myForm);
+            var fd = new FormData($(this)[0]);
+
+            var filename = $("#" + myFile).val();
+
+            var extension = filename.replace(/^.*\./, '');
+
+            var string = checkMe();
+
+            var arr = string.split(',');
+
+            if (filename == '') {
+                alert("Select File First.");
+            } else {
+                if ($.inArray(extension, arr) > -1) {
+                    myAjax(form, fd);
+                } else {
+                    alert('your File extension is wrong. It should be ' + string);
+                    $("#" + myFile).val("");
+                }
+            }
+
+            console.info(fd);
+
+        }
+
+        function myAjax(form, fd) {
+            $.ajax({
+                type: 'POST',
+                url: "/sherlock-admin/admin/macro/upload",
+                data: fd,
+                cache: false,
+                processData: false,
+                contentType: false,
+                async: false,
+                beforeSend: function () {
+                    $('#myModal').modal('show');
+                    $("#msg").val("");
+                },
+                complete: function () {
+                    $('#myModal').modal('hide');
+                },
+                success: function (response) {
+                   /*  document.getElementById("view").style.display = 'block'; */
+                    alert("File has been uploaded.");
+                    console.info(response);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.info("Status: " + XMLHttpRequest);
+                    //alert("Status: " + textStatus);
+                    //alert("Error: " + errorThrown);
+                }
+            });
+        }
+
+
+       /*  window.onload = function () {
+            document.getElementById("view").style.display = 'none';
+        } */
+    </script>
+    <script th:inline="javascript">
+
+        /*<![CDATA[*/
+
+        var extensions = /*[[${data.imageExtension}]]*/ 'User Name';
+
+        /*]]>*/
+        function checkMe() {
+
+            return extensions;
+        }
+
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+        function populateData(element, data) {
+            var count = Object.keys(data).length
+            for (i = 0; i < count; i++) {
+
+                populateElement(element, data[i]);
+            }
+        }
+
+
+        function populateElement(element, data) {
+
+            var element = $('#' + element + '');
+
+            var fileElement = '<span> <p><b>Trend Title :</b></p><span>' + data.trendTitle + '</span>' +
+                    '<form id="formVariable' + data.id + '" method="POST" th:action="@{/admin/macro/upload}" enctype="multipart/form-data">' +
+                    '<label class="input-file">' +
+                    '<input type="hidden" id="' + data.id + '" value="' + data.id + '" name="id" />' +
+                    '<input type="file" name="macroFile" id="msgVariable' + data.id + '"/></label>' +
+                    '</label>' +
+                    '<input value="Upload" class="btn btn-primary btn-sm rounded pull-right" id="Variable' + data.id + '" type="submit" onclick="return myForm(this.id);" />'
+            '</form>';
+            element.append(fileElement);
+        }
+
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+
+        function fillData() {
+             var result = [[${data.result}]];
+            if (result == true)
+                alert("Upload successfully");
+            var macroTrends = [[${data.macroTrend}]];
+            var count = Object.keys(macroTrends).length
+            if (macroTrends != null && count > 0) {
+                var globalTrends = macroTrends['GLOBAL'];
+                var thaiTrends = macroTrends['THAI'];
+
+                if (globalTrends != null && globalTrends.length > 0) {
+                    populateData('globalImages', globalTrends);
+                } else {
+                    $("#globalImages").append("<p>No Global trends uploaded </p>")
+                }
+
+                if (thaiTrends != null && thaiTrends.length > 0) {
+                    populateData('thaiImages', thaiTrends);
+                } else {
+
+                    $("#thaiTrends").append("<p>No Thai trends uploaded </p>")
+                }
+
+            } else {
+                $("#globalImages").append("<p>No Global trends uploaded </p>");
+                $("#thaiImages").append("<p>No Thai trends uploaded </p>");
+
+            }
+
+        }
+        window.onload = function () {
+            fillData();
+        }
+
+
+    </script>
+
+</head>
+<body>
+
+
+<div class="main-wrapper">
+    <div class="app" id="app">
+        <div th:replace="/fragments/component :: header"/>
+        <div th:replace="/fragments/component :: sidebar"/>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+
+        <article class="content dashboard-page">
+            <section class="section">
+                <div class="row sameheight-container">
+                    <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+                        <div class="card">
+                            <div class="card-header card-header-sm bordered">
+                                <div class="header-block">
+                                    <h3 class="title">Macro Image</h3>
+                                </div>
+                            </div>
+                            <div class="card-block card-sd">
+                                <div class="preview-imaes" style="display: block;">
+                                    <p class="up-img">Upload Image</p>
+
+                                    <div class="row">
+                                        <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-6">
+                                            <div class="pd-border">
+                                                <p class="up-img">Global Economic Trends</p>
+
+                                                <div id="globalImages"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-6 col-xl-6">
+                                            <div class="pd-border">
+                                                <p class="up-img">Global Economic Trends</p>
+
+                                                <div id="thaiImages"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div id="myModal" class="modal">
+                                    <div class="row">
+                                        <div class="col-sm-12" style="margin-top:25%;margin-left:50%;">
+                                            <img src="../../../resources/assets/spinner.gif"
+                                                 th:src="@{/resources/assets/spinner.gif}"/>
+                                            <span id="processMsg"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <div th:replace="/fragments/component :: footer"/>
+    </div>
+</div>
+</body>
+</html>
